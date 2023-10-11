@@ -1,0 +1,918 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Helpers\GlobalHelper;
+use App\Models\KonfigurasiModel;
+use App\Models\Krs_temp_model;
+use App\Models\KrsModel;
+use App\Models\KrsPegawaiTemplateModel;
+use App\Models\PegawaiModel;
+use App\Models\PegawaiTalentaModel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
+use Yajra\DataTables\Facades\DataTables;
+use App\Exports\talentMapping;
+use App\Exports\talentMappingFinal;
+use App\Exports\talentMappingFinalBatch2;
+use App\Imports\TalentMappingImport;
+use App\Models\KrsBobot;
+use App\Models\KrsFinalModel;
+use App\Models\KrsHeaderModel;
+use App\Models\KrsAdminTemplateModel;
+use App\Models\TikpodModel;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use App\Imports\KrsAdministratorImport;
+use Illuminate\Support\Str;
+
+class KrsController extends Controller
+{
+    public function index(){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            return view('talent-mapping.krs');
+        }else{
+            return view('notfound');
+        }
+    }
+    public function add(){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $dt1=KrsModel::select('id','deskripsi')
+                       //->whereJenis('administrator')
+                       ->whereBatch('1')
+                       ->whereStatus('publish')
+                       ->orderBy('tahun','desc')
+                       ->orderBy('id','desc')
+                       ->get();
+            return view('talent-mapping.krs-add',compact('dt1'));
+        }else{
+            return view('notfound');
+        }
+    }
+    public function store(Request $request){
+        if($request->batch=="2" && ($request->jenis=="administrator" || $request->jenis=="jpt")){
+            $request->validate([
+                'tahun'=>'required',
+                'jenis'=>'required',
+                'batch'=>'required',
+                'id_krs_awal'=>'required',
+                'deskripsi'=>'required',
+            ]);
+        }else{
+            $request->validate([
+                'tahun'=>'required',
+                'jenis'=>'required',
+                'batch'=>'required',
+                'deskripsi'=>'required',
+            ]);
+
+        }
+
+        //try{
+
+            $id=KrsModel::insertGetId([
+                'tahun'=>$request->tahun,
+                'jenis'=>$request->jenis,
+                'batch'=>$request->batch,
+                'deskripsi'=>$request->deskripsi,
+                'id_krs_awal'=>$request->id_krs_awal,
+                'status'=>'in_progress',
+                'created_at'=>now(),
+                'created_by'=>Auth::user()->userid,
+            ]);
+
+            session()->flash('respon','success');
+            session()->flash('message','Data berhasil ditambah');
+            return redirect('/talent-mapping');
+
+        // }catch (Throwable $e) {
+        //     report($e);
+        //     session()->flash('respon','failed');
+        //     session()->flash('message','Data gagal diperbaharui, Ada format pengisian yang salah');
+        //     return back();
+        // }
+    }
+
+    public function getDataKrs(Request $request){
+
+        $data=KrsModel::orderBy('tahun','desc')->get();
+        $data=KrsModel::select('id','tahun','deskripsi','jenis','batch','status')->orderBy('tahun','desc')->orderBy('id','desc')->get();
+
+        return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $totTemp=Krs_temp_model::select('id')->whereId_krs($data->id)->count();
+                    $totData=KrsFinalModel::select('id')->whereId_krs($data->id)->whereJenis('isi')->count();
+
+                    $action="<a href='/talent-mapping/konfigurasi/".$data->id."' class='btn btn-dark btn-sm'  title='Setting Konfigurasi'>Hitung</a>
+                             <a href='/talent-mapping/upload/".$data->id."' class='btn btn-success btn-sm'>Upload</a>";
+                    if($totTemp > 0 && $data->status=="in_progress"){
+                        $action=$action." <a href='/talent-mapping/daftar-usulan/".$data->id."' class='btn btn-primary btn-sm'>Daftar Usulan</a>";
+                    }else if($data->batch=="2" && $data->jenis=="administrator" && $data->status=="in_progress"){
+                        $action=$action." <a href='/talent-mapping/daftar-usulan/".$data->id."' class='btn btn-primary btn-sm'>Daftar Usulan</a>";
+                    }
+                    if($totData > 0){
+                        $action=$action. " <a href='/talent-mapping/detail/".$data->id."' class='btn btn-info btn-sm'>Detail</a>";
+                    }
+                    $action=$action. " <a href='#' class='btn btn-danger btn-sm' title='Hapus'><i class='fa fa-trash'></i> Hapus </a>";
+                    return $action;
+
+                })
+                ->addColumn('status',function($data){
+                    return str_ireplace("_"," ",$data->status);
+                })
+                ->rawColumns(['action','status'])
+                ->make(true);
+
+    }
+
+    public function konfigurasi($id){
+        $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","fileupload","id_tikpot")
+                        ->whereId($id)->first();
+        $getPendidikan=GlobalHelper::getDTP('pendidikan');
+        $getEselon=GlobalHelper::getDTP('eselon');
+        $getGolongan=GlobalHelper::getDTP('golongan');
+        $getPangkat=GlobalHelper::getDTP('pangkat');
+        $getLvlJabatan=GlobalHelper::getDTP('level_jabatan');
+        $getStatusPegawai=GlobalHelper::getDTP('statuspegawai');
+        $getTipePegawai=GlobalHelper::getDTP('tipepegawai');
+
+        $dataPenkom=KonfigurasiModel::whereId_krs($id)->whereJenis('penkom')->first();
+        $dataKonfig=KonfigurasiModel::whereId_krs($id)->whereJenis('pegawai')->first();
+        $bobot_diklat=GlobalHelper::getDataKonfig($id,'bobot_diklat','bobot');
+        $bobot_rwjabatan=GlobalHelper::getDataKonfig($id,'bobot_rwjabatan','bobot');
+        $skp2=GlobalHelper::getDataKonfig($id,'skp2','skp');
+        $skp1=GlobalHelper::getDataKonfig($id,'skp1','skp');
+        return view('talent-mapping.konfig',compact('data','getPendidikan','getEselon',
+                'getGolongan','getPangkat','getLvlJabatan','getStatusPegawai','getTipePegawai','id',
+                'dataPenkom','dataKonfig','bobot_diklat','bobot_rwjabatan','skp2','skp1'));
+
+    }
+
+    public function konfigurasiStep3($id){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $data=DB::select("select id, tahun, deskripsi, batch,jenis
+                        FROM krs
+                        WHERE id='".$id."'
+                        Order By tahun,id desc
+                        ");
+
+            $datapenkom=KonfigurasiModel::whereJenis('penkom')
+                        ->whereId_krs($id)->first();
+
+            $dataSKP=KonfigurasiModel::whereJenis('skoring_pendidikan')
+                        ->whereId_krs($id)->get();
+
+            $dataRWJ=KonfigurasiModel::whereJenis('riwayat_jabatan')
+                        ->whereId_krs($id)->get();
+
+            $dataDT=KonfigurasiModel::whereJenis('diklat_teknis')
+                        ->whereId_krs($id)->get();
+            $dataSP=KonfigurasiModel::whereJenis('skoring_pangkat')
+                        ->whereId_krs($id)->get();
+
+            $dataDSS=KonfigurasiModel::whereJenis('diklat_struktural')
+                        ->whereKriteria('Sesuai')
+                        ->whereId_krs($id)->first();
+
+            $dataDST=KonfigurasiModel::whereJenis('diklat_struktural')
+                        ->whereKriteria('Tidak Sesuai')
+                        ->whereId_krs($id)->first();
+            $getPendidikan=GlobalHelper::getDTP('pendidikan');
+            $getGolongan=GlobalHelper::getDTP('golongan');
+            return view('talent-mapping.krs-step3',compact('data','id','datapenkom','dataSKP','dataRWJ','dataDT','dataSP','dataDSS','dataDST','getPendidikan','getGolongan'));
+        }else{
+            return view('notfound');
+        }
+
+    }
+
+    public function storekonfig(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header("Content-type: application/json");
+        $post=array();$data=null;
+        if($request->jenis=='penkom'){
+            KonfigurasiModel::whereJenis('penkom')->delete();
+        }else if($request->jenis=='diklat_struktural'){
+            KonfigurasiModel::whereJenis('diklat_struktural')->delete();
+        }
+
+        if($request->type=='add'){
+            KonfigurasiModel::create([
+                'id_krs'=>$request->id_krs,
+                'jenis'=>$request->jenis,
+                'kriteria'=>$request->kriteria,
+                'isidata'=>$request->isidata,
+                'created_by'=>$request->created_by,
+                'created_at'=>now()]);
+
+            if($request->jenis=='diklat_struktural'){
+                KonfigurasiModel::create([
+                    'id_krs'=>$request->id_krs,
+                    'jenis'=>$request->jenis,
+                    'kriteria'=>$request->kriteria_2,
+                    'isidata'=>$request->isidata_2,
+                    'created_by'=>$request->created_by,
+                    'created_at'=>now()]);
+            }
+        }else{
+            KonfigurasiModel::find($request->id)->delete();
+        }
+
+        $data=KonfigurasiModel::where('id_krs','=',$request->id_krs)
+                      ->where('jenis','=',$request->jenis)->orderBy('id','asc')->get();
+
+        $post=array('respon'=>'success','data'=>$data);
+
+        echo json_encode($post);
+    }
+
+    public function prosesHitung($id){
+        $konfigPenkom=GlobalHelper::getKonfigKrsPenkom($id);
+        $penkom=$konfigPenkom->kriteria;
+        $minPenkom=$konfigPenkom->isidata;
+        $master=GlobalHelper::getKrs($id);
+        $tahun_krs=$master->tahun;
+        $jenis_krs=$master->jenis;
+
+
+        Krs_temp_model::whereId_krs($id)->delete();
+
+        $kueri=KrsPegawaiTemplateModel::select('krs_pegawai_template.nip','krs_pegawai_template.nama_lengkap',
+                                        'krs_pegawai_template.tgl_lahir','krs_pegawai_template.pendidikan',
+                                        'krs_pegawai_template.eselon','krs_pegawai_template.level_jabatan',
+                                        'krs_pegawai_template.satker','krs_pegawai_template.nama_jabatan',
+                                        'krs_pegawai_template.tmt_jabatan',
+                                        'krs_pegawai_template.tahun_penkom',
+                                        'krs_pegawai_template.mansoskul',
+                                        'krs_pegawai_template.generik',
+                                        'krs_pegawai_template.spesifik',
+                                        'krs_pegawai_template.pangkat','krs_pegawai_template.golongan',
+                                        'rwjabatan_hitung.total as ttl_jabatan',
+                                        'rwdiklat_hitung.diklat_struktural',
+                                        'rwdiklat_hitung.diklat_teknis')
+                ->join('rwdiklat_hitung','rwdiklat_hitung.nip','=','krs_pegawai_template.nip')
+                ->join('rwjabatan_hitung','rwjabatan_hitung.nip','=','krs_pegawai_template.nip')
+                ->distinct('krs_pegawai_template.nip')
+                ->where('krs_pegawai_template.id_krs','=',$id)->get();
+
+        $bobotJabatan=GlobalHelper::getDataKonfig($id,'bobot_rwjabatan','bobot');
+        $bobotDiklat=GlobalHelper::getDataKonfig($id,'bobot_diklat','bobot');
+        $skp2=GlobalHelper::getDataKonfig($id,'skp2','skp');
+        $skp1=GlobalHelper::getDataKonfig($id,'skp1','skp');
+
+
+        foreach($kueri as $key => $item){
+            if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+                $skor_jabatan=GlobalHelper::getSkorJabatan($id,$item->ttl_jabatan);
+                $skor_DT=GlobalHelper::getSkorDT($id,$item->diklat_teknis);
+                $total_skor_jabatan=($skor_jabatan/$bobotJabatan)*100;
+                $bobotDS=GlobalHelper::getBobotDS($id,$item->diklat_struktural);
+                $totalDS=$bobotDS + $skor_DT;
+                $totalDSPersen=round(($totalDS / $bobotDiklat)*100,2);
+                $array=array(
+                    'id_krs'=>$id,
+                    'jenis'=>$jenis_krs,
+                    'nip'=> $item->nip,
+                    'nama'=>$item->nama_lengkap,
+                    'tgl_lahir'=>$item->tgl_lahir,
+                    'pendidikan'=>$item->pendidikan,
+                    'eselon'=>$item->eselon,
+                    'level_jabatan'=>$item->level_jabatan,
+                    'provinsi'=>'',
+                    'satker'=>$item->satker,
+                    'nama_jabatan'=>$item->nama_jabatan,
+                    'tmt_jabatan'=>$item->tmt_jabatan,
+                    'pangkat'=>$item->pangkat,
+                    'golongan'=>$item->golongan,
+                    'cek_penkom'=>$item->tahun_penkom,
+                    'skoring_mansoskul'=>$item->mansoskul,
+                    'skoring_generik'=>$item->generik,
+                    'skoring_spesifik'=>$item->spesifik,
+                    'skoring_pendidikan'=>GlobalHelper::getSkorPendidikan($id,$item->pendidikan),
+                    'total_rw_jabatan'=>$item->ttl_jabatan,
+                    'bobot_rw_jabatan'=>$skor_jabatan,
+                    'bobot_rw_jabatan_total'=>round($total_skor_jabatan, 4),
+                    'diklat_struktural'=>$item->diklat_struktural,
+                    'bobot_ds'=>$bobotDS,
+                    'diklat_teknis'=>$item->diklat_teknis,
+                    'bobot_dt'=>$skor_DT,
+                    'total_bobot'=>$totalDS,
+                    'total_bobot_persen'=>$totalDSPersen,
+                    'skoring_pangkat'=>GlobalHelper::getSkorPangkat($id,$item->golongan),
+                    'year2'=>GlobalHelper::getSKP($item->nip,$skp2),
+                    'year1'=>GlobalHelper::getSKP($item->nip,$skp1),
+                    'penilaian_perilaku'=>GlobalHelper::getPerilaku($item->nip,$tahun_krs),
+                    'created_by'=>Auth::user()->userid,
+                );
+                Krs_temp_model::create($array);
+                 //print_r($array);
+                return view('talent-mapping.krs-hitung',compact('id','penkom'));
+            }else{
+                return view('notfound');
+            }
+        }
+    }
+    public function getUsulan($id){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","status","fileupload","id_tikpot")
+              ->whereId($id)->first();
+            if($data->batch=="2" && $data->jenis=="administrator"){
+                $dtBobot=KrsBobot::whereId_krs($id)->whereJenis('header')->first();
+                $dtBobotIsi=KrsBobot::whereId_krs($id)->whereJenis('isi')->first();
+                return view('talent-mapping.krs-daftar-usulan',compact('id','data','dtBobot','dtBobotIsi'));
+            }else{
+                return view('talent-mapping.krs-hitung',compact('id'));
+            }
+        }else{
+            return view('notfound');
+        }
+    }
+
+    public function getListTemp(Request $request){
+        $param='';
+        if ($request->ajax()) {
+            $data= Krs_temp_model::where('id_krs','=',$request->id_krs)->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('nip', function ($data) {
+                    return "<a href='#' class='text-primary' onclick=showGlobalModal('".$data->nip."')>".$data->nip."</a>";
+                })
+                ->rawColumns(['nip','diklat_teknis'])
+                ->make(true);
+        }
+    }
+
+    public function simpankonfig(Request $request){
+        $kueri=PegawaiTalentaModel::select('pegawai.pegawaiID','pegawai.nip','pegawai.thnpns','pegawai.nama_lengkap',
+                                        'pegawai.tgl_lahir','pegawai.pendidikan','pegawai.eselon','pegawai.tmteselon',
+                                        'pegawai.pangkat','pegawai.golongan','pegawai.tmtpangkat','pegawai.level_jabatan',
+                                        'pegawai.nama_jabatan','pegawai.tmt_jabatan','pegawai.satker','pegawai.tipepegawai',
+                                        'pegawai.statuspegawai','pegawai.kedudukan','penkom.mansoskul',
+                                        'penkom.teknis_generik','penkom.teknis_spesifik','penkom.tahun');
+
+
+        $master=GlobalHelper::getKrs($request->id);
+        $tahun_krs=$master->tahun;
+        $jenis_krs=$master->jenis;
+
+        KonfigurasiModel::whereId_krs($request->id)->whereJenis('penkom')->delete();
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'penkom',
+            'kriteria'=>$request->jenis_penkom,
+            'isidata'=>$request->tahun_penkom,
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+
+        KonfigurasiModel::whereId_krs($request->id)->whereJenis('bobot')->delete();
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'bobot',
+            'kriteria'=>'bobot_rwjabatan',
+            'isidata'=>$request->bobot_rwjabatan,
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'bobot',
+            'kriteria'=>'bobot_diklat',
+            'isidata'=>$request->bobot_diklat,
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+
+        //simpan data skp
+        KonfigurasiModel::whereId_krs($request->id)->whereJenis('skp')->delete();
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'skp',
+            'kriteria'=>'skp2',
+            'isidata'=>$request->skp2,
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'skp',
+            'kriteria'=>'skp1',
+            'isidata'=>$request->skp1,
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+        $data=array();
+        foreach ($request->jenis as $key3=>$item3) {
+            switch($request->jenis[$key3]){
+                case "umur":
+                case "pns":
+                case "tmt_eselon":
+                case "tmt_pangkat":
+                case "tmt_jabatan":
+                case "satker":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->isi[$key3]));
+                    break;
+                case "pendidikan":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_pendidikan_value));
+                    break;
+                case "eselon":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_eselon_value));
+                    break;
+                case "pangkat":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_pangkat_value));
+                    break;
+                case "golongan":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_golongan_value));
+                    break;
+                case "level_jabatan":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_lvl_jabatan_value));
+                    break;
+                case "tipe_pegawai":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_tipe_pegawai_value));
+                    break;
+                case "status_pegawai":
+                    $data[]=array("jenis"=>$item3,"param"=>$request->param[$key3],"detail"=>$request->isi_det[$key3],"value"=>array("value"=>$request->ck_status_pegawai_value));
+                    break;
+            }
+        }
+
+        KonfigurasiModel::whereId_krs($request->id)->whereJenis('pegawai')->delete();
+        KonfigurasiModel::create([
+            'id_krs'=>$request->id,
+            'jenis'=>'pegawai',
+            'kriteria'=>'konfig',
+            'isidata'=>json_encode($data),
+            'created_by'=>Auth::user()->userid,
+            'created_at'=>now()
+        ]);
+
+        foreach ($request->isi as $key=>$item) {
+            if($item !=''){
+                switch($request->jenis[$key]){
+                    case "umur":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.tgl_lahir',$request->param[$key],$newdate);
+                        break;
+                    case "pns":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Ym', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.thnpns',$request->param[$key],$newdate) ;
+                        break;
+                    case "pendidikan":
+                        $kueri->whereIn('pegawai.pendidikan',$request->ck_pendidikan_value);
+                        break;
+                    case "eselon":
+                        $kueri->whereIn('pegawai.eselon',$request->ck_eselon_value);
+                        break;
+                    case "tmt_eselon":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.tmteselon',$request->param[$key],$newdate);
+                        break;
+                    case "pangkat":
+                        $kueri->whereIn('pegawai.pangkat',$request->ck_pangkat_value);
+                        break;
+                    case "golongan":
+                        $kueri->whereIn('pegawai.golongan',$request->ck_golongan_value);
+                        break;
+                    case "tmt_pangkat":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.tmtpangkat',$request->param[$key],$newdate);
+                        break;
+                    case "level_jabatan":
+                        $kueri->whereIn('pegawai.level_jabatan',$request->ck_lvl_jabatan_value);
+                        break;
+                    case "tmt_jabatan":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.tmt_jabatan',$request->param[$key],$newdate);
+                        break;
+                    case "satker":
+                        $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
+                        $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
+                        $kueri=$kueri->where('pegawai.satker',$request->param[$key],$newdate);
+                        break;
+                    case "tipe_pegawai":
+                        $kueri->whereIn('pegawai.tipepegawai',$request->ck_tipe_pegawai_value);
+                        break;
+                    case "status_pegawai":
+                        $kueri->whereIn('pegawai.statuspegawai',$request->ck_status_pegawai_value);
+                        break;
+                }
+            }
+
+
+        }
+        $kueri->join('penkom','penkom.nip','=','pegawai.nip')
+                ->distinct('pegawai.nip')
+                ->where('penkom.tahun','>=',$request->tahun_penkom)
+                ->where('penkom.tahun','<=',$tahun_krs)
+                ->where('penkom.jenis','=',$request->jenis_penkom);
+        $finalQ=$kueri->get();
+
+        KrsPegawaiTemplateModel::whereId_krs($request->id)->whereCreated_by(Auth::user()->userid)->delete();
+
+        foreach($finalQ as $key2=>$rw){
+            $dtPenkom=GlobalHelper::getDataPenkom($rw->nip,$tahun_krs,$request->jenis_penkom);
+            KrsPegawaiTemplateModel::create([
+                'pegawaiID'=>$rw->pegawaiID,
+                'nip'=>$rw->nip,
+                'thnpns'=>$rw->thnpns,
+                'nama_lengkap'=>$rw->nama_lengkap,
+                'tgl_lahir'=>$rw->tgl_lahir,
+                'pendidikan'=>$rw->pendidikan,
+                'eselon'=>$rw->eselon,
+                'tmteselon'=>$rw->tmteselon,
+                'pangkat'=>$rw->pangkat,
+                'golongan'=>$rw->golongan,
+                'tmtpangkat'=>$rw->tmtpangkat,
+                'level_jabatan'=>$rw->level_jabatan,
+                'nama_jabatan'=>$rw->nama_jabatan,
+                'tmt_jabatan'=>$rw->tmt_jabatan,
+                'satker'=>$rw->satker,
+                'tipepegawai'=>$rw->tipepegawai,
+                'statuspegawai'=>$rw->statuspegawai,
+                'kedudukan'=>$rw->kedudukan,
+                'id_krs'=>$request->id,
+                'tahun_krs'=>$tahun_krs,
+                'jenis_krs'=>$jenis_krs,
+                'tahun_penkom'=>$dtPenkom->tahun,
+                'mansoskul'=>$dtPenkom->mansoskul,
+                'generik'=>$dtPenkom->teknis_generik,
+                'spesifik'=>$dtPenkom->teknis_spesifik,
+                'created_by'=>Auth::user()->userid,
+                'created_at'=>now(),
+
+            ]);
+        }
+        return redirect('/talent-mapping/step2/'.$request->id.'/'.$request->jenis_penkom.'');
+
+    }
+
+    public function step2($id,$jenis){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            return view('talent-mapping.krs-step2',compact('id','jenis'));
+        }else{
+            return view('notfound');
+        }
+
+    }
+    public function getDataStep2(Request $request){
+        $param='';
+        if ($request->ajax()) {
+            $data= KrsPegawaiTemplateModel::where('id_krs','=',$request->id_krs)->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
+
+    public function export($id)
+    {
+        $konfigPenkom=GlobalHelper::getKonfigKrsPenkom($id);
+        $penkom=$konfigPenkom->kriteria;
+        return Excel::download(new talentMapping($id,$penkom), 'talent-mapping.xlsx');
+    }
+
+    public function upload($id){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $data=KrsModel::select("id","tahun","deskripsi","batch","jenis")
+                            ->whereId($id)->first();
+            $dtTikpot=TikpodModel::select("id","nama")->whereStatus('a')->orderBy('id','desc')->get();
+            return view('talent-mapping.upload',compact('data','id','dtTikpot'));
+        }else{
+            return view('notfound');
+        }
+    }
+
+    public function prosesupload(Request $request){
+        $request->validate([
+            'fileupload'=>'required',
+            'id_tikpot'=>'required',
+
+        ]);
+
+        $file = $request->file('fileupload');
+        $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+        $nama_file = 'Talent-mapping-'.$request->id.'.'.$ext;
+
+        KrsModel::whereId($request->id)->update([
+            'fileupload'=>$nama_file,
+            'id_tikpot'=>$request->id_tikpot
+        ]);
+
+        $path = $file->storeAs('public/excel/imports/talent-mapping/',$nama_file);
+
+        // import data
+        return redirect('/talent-mapping/upload/step2/'.$request->id.'');
+    }
+
+    public function uploadStep2($id){
+        $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","fileupload","id_tikpot")
+                        ->whereId($id)->first();
+
+        $nama_file=$data->fileupload;
+        HeadingRowFormatter::default('none');
+        $headings = (new HeadingRowImport)->toArray(storage_path('app/public/excel/imports/talent-mapping/'.$nama_file)); // set csv path here or $request->file('upload_file');
+
+        return view('talent-mapping.upload-step2',[
+            'id'=>$id,
+            'headings'=>$headings,
+            'data'=>$data
+        ]);
+
+
+    }
+    public function prosesuploadStep2(Request $request){
+        $request->validate([
+            'pegawai'=>'required',
+            'potensial'=>'required',
+            'kinerja'=>'required',
+
+        ]);
+
+        $header=array();$bobotPotensial=array();$bobotKinerja=array();
+        foreach($request->pegawai as $key=>$rw){
+            array_push($header,$rw);
+        }
+        foreach($request->potensial as $key=>$rw){
+            array_push($header,$rw);
+            array_push($bobotPotensial,0);
+            $tp=explode('^',$rw);
+            array_push($header,'Bobot '.$tp[1].'');
+        }
+        foreach($request->kinerja as $key=>$rw){
+            array_push($header,$rw);
+            array_push($bobotKinerja,0);
+            $tp=explode('^',$rw);
+            array_push($header,'Bobot '.$tp[1].'');
+        }
+
+        array_push($header,'Potensial');
+        array_push($header,'Kinerja');
+        array_push($header,'Kotak Pemetaan');
+
+        KrsHeaderModel::whereId_krs($request->id)->delete();
+        KrsHeaderModel::create([
+            'id_krs'=>$request->id,
+            'pegawai'=>json_encode($request->pegawai),
+            'potensial'=>json_encode($request->potensial),
+            'kinerja'=>json_encode($request->kinerja),
+            'header'=>json_encode($header),
+            'created_at'=>now(),
+            'created_by'=>Auth::user()->userid,
+        ]);
+
+        KrsBobot::whereId_krs($request->id)->delete();
+        KrsBobot::create([
+            'id_krs'=>$request->id,
+            'potensial'=>json_encode($request->potensial),
+            'kinerja'=>json_encode($request->kinerja),
+            'jenis'=>'header',
+            'created_at'=>now(),
+            'created_by'=>Auth::user()->userid,
+        ]);
+
+        KrsBobot::create([
+            'id_krs'=>$request->id,
+            'potensial'=>json_encode($bobotPotensial),
+            'kinerja'=>json_encode($bobotKinerja),
+            'jenis'=>'isi',
+            'created_at'=>now(),
+            'created_by'=>Auth::user()->userid,
+        ]);
+
+        return redirect('/talent-mapping/konfigbobot/'.$request->id.'');
+
+    }
+
+    public function konfigBobot($id){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","fileupload","id_tikpot")
+                        ->whereId($id)->first();
+            $dtBobot=KrsBobot::whereId_krs($id)->whereJenis('header')->first();
+            $dtBobotIsi=KrsBobot::whereId_krs($id)->whereJenis('isi')->first();
+            return view('talent-mapping.konfigbobot',compact('id','data','dtBobot','dtBobotIsi'));
+        }else{
+            return view('notfound');
+        }
+    }
+
+    public function calculateKRS(Request $request){
+        //update bobot
+        $arrPotensial=array();$arrKinerja=array();
+        foreach($request->potensial as $key=>$val){
+            array_push($arrPotensial,(int)$val);
+        }
+        foreach($request->kinerja as $key=>$val){
+            array_push($arrKinerja,(int)$val);
+        }
+        KrsBobot::whereId_krs($request->id)->whereJenis('isi')->delete();
+        KrsBobot::create([
+            'id_krs'=>$request->id,
+            'potensial'=>json_encode($arrPotensial),
+            'kinerja'=>json_encode($arrKinerja),
+            'jenis'=>'isi',
+            'created_at'=>now(),
+            'created_by'=>Auth::user()->userid,
+        ]);
+
+        //calculate and save krs
+        KrsFinalModel::whereId_krs($request->id)->delete();
+        $data=KrsHeaderModel::whereId_krs($request->id)->first();
+        $dtPotensial=KrsBobot::whereId_krs($request->id);
+        $pegawai=$potensial=$kinerja=$nilai=array();
+        $jsonPegawai=json_decode($data->pegawai);
+        for($i = 0; $i < count($jsonPegawai); $i++){
+            array_push($pegawai,$jsonPegawai[$i]);
+        }
+
+        $jsonPotensial=json_decode($data->potensial);
+        for($i = 0; $i < count($jsonPotensial); $i++){
+            array_push($potensial,$jsonPotensial[$i]);
+            array_push($potensial,'Bobot '.$jsonPotensial[$i].' ('.$request->potensial[$i].'%)');
+
+        }
+        $jsonKinerja=json_decode($data->kinerja);
+        for($i = 0; $i < count($jsonKinerja); $i++){
+            array_push($kinerja,$jsonKinerja[$i]);
+            array_push($kinerja,'Bobot '.$jsonKinerja[$i].' ('.$request->kinerja[$i].'%)');
+
+        }
+
+        //echo $request->id;
+        KrsFinalModel::create([
+            'id_krs'=>$request->id,
+            'nip'=>'00',
+            'pegawai'=>json_encode($pegawai),
+            'potensial'=>json_encode($potensial),
+            'kinerja'=>json_encode($kinerja),
+            'nilai'=>json_encode(array('Potensial','Kinerja','Peta Talenta')),
+            'jenis'=>'header',
+            'status'=>'non',
+            'created_at'=>now(),
+            'created_by'=>Auth::user()->userid,
+        ]);
+
+        $dataUpload=KrsModel::select("fileupload")
+                         ->whereId($request->id)->first();
+
+        $nama_file=$dataUpload->fileupload;
+        $import = Excel::import(new TalentMappingImport($request->id), storage_path('app/public/excel/imports/talent-mapping/'.$nama_file));
+        if($import){
+            KrsModel::find($request->id)->update(['status'=>'non_publish']);
+            return redirect('talent-mapping/detail/'.$request->id);
+        }
+    }
+
+    public function detail($id){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","status","fileupload","id_tikpot")
+                        ->whereId($id)->first();
+            $dtBobot=KrsBobot::whereId_krs($id)->whereJenis('header')->first();
+            $dtBobotIsi=KrsBobot::whereId_krs($id)->whereJenis('isi')->first();
+            return view('talent-mapping.krs-detail',compact('id','data','dtBobot','dtBobotIsi'));
+
+        }else{
+            return view('notfound');
+        }
+    }
+
+    public function getdetailkrs(Request $request){
+        $param='';
+       // if ($request->ajax()) {
+            $data= KrsFinalModel::select('krs_final.nip','krs_final.nilai','pegawai.pangkat','pegawai.golongan','pegawai.nama_lengkap')
+                    ->join('pegawai','pegawai.nip','=','krs_final.nip')
+                    ->where('id_krs','=',$request->id_krs)->whereJenis('isi')
+                    ->orderBy('krs_final.id','asc')
+                    ->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('nip', function ($data) {
+                    return "<a href='#' class='text-primary' onclick=showGlobalModal('".$data->nip."')>".$data->nip."</a>";
+                })
+                ->addColumn('potensial',function($data){
+                    $json=json_decode($data->nilai);
+                    $potensial=$json[0];
+                    return $potensial;
+                })
+                ->addColumn('kinerja',function($data){
+                    $json=json_decode($data->nilai);
+                    $kinerja=$json[1];
+                    return $kinerja;
+                })
+                ->addColumn('kotak',function($data){
+                    $json=json_decode($data->nilai);
+                    $kotak=$json[2];
+                    return $kotak;
+                })
+                ->rawColumns(['nip','potensial','kinerja','kotak'])
+                ->make(true);
+        //}
+    }
+
+    public function updateStatus($id,$status){
+        KrsFinalModel::whereId_krs($id)->update(['status'=>$status]);
+        KrsModel::find($id)->update(['status'=>$status]);
+        if($status=='publish'){
+            $dt_awal=KrsModel::find($id);
+            if($dt_awal->id_krs_awal != null){
+                KrsModel::find($dt_awal->id_krs_awal)->update(['status'=>'non_publish']);
+                KrsFinalModel::whereId_krs($dt_awal->id_krs_awal)->update(['status'=>'non_publish']);
+            }
+
+        }else{
+            $dt_awal=KrsModel::find($id);
+            if($dt_awal->id_krs_awal != null){
+                KrsModel::find($dt_awal->id_krs_awal)->update(['status'=>'publish']);
+                KrsFinalModel::whereId_krs($dt_awal->id_krs_awal)->update(['status'=>'publish']);
+            }
+        }
+
+        return back();
+    }
+
+    public function getDaftarUsulan(Request $request){
+        $param='';
+       // if ($request->ajax()) {
+            $data= KrsAdminTemplateModel::select('krs_pegawai_temp_admin.id_krs','krs_pegawai_temp_admin.nip','krs_pegawai_temp_admin.nilai','pegawai.pangkat','pegawai.golongan','pegawai.nama_lengkap')
+                    ->join('pegawai','pegawai.nip','=','krs_pegawai_temp_admin.nip')
+                    ->where('id_krs','=',$request->id_krs)->whereJenis('isi')
+                    ->orderBy('krs_pegawai_temp_admin.id','asc')
+                    ->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('nip', function ($data) {
+                    return "<a href='#' class='text-primary' onclick=showGlobalModal('".$data->id_krs."','".$data->nip."')>".$data->nip."</a>";
+                })
+                ->addColumn('potensial',function($data){
+                    $json=json_decode($data->nilai);
+                    $potensial=$json[0];
+                    return $potensial;
+                })
+                ->addColumn('kinerja',function($data){
+                    $json=json_decode($data->nilai);
+                    $kinerja=$json[1];
+                    return $kinerja;
+                })
+                ->addColumn('kotak',function($data){
+                    $json=json_decode($data->nilai);
+                    $kotak=$json[2];
+                    return $kotak;
+                })
+                ->rawColumns(['nip','potensial','kinerja','kotak'])
+                ->make(true);
+        //}
+    }
+
+    public function getDetailDaftarUsulan(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header("Content-type: application/json");
+
+        $data=KrsAdminTemplateModel::whereId_krs($request->id_krs)->whereNip($request->nip)->first();
+        $header=KrsAdminTemplateModel::whereId_krs($request->id_krs)->whereJenis('header')->first();
+        if($data){
+            $posts=array('response'=>'success','data'=>$data,'header'=>$header);
+        }else{
+            $posts=array('response'=>'success','data'=>array(),'header'=>$header);
+        }
+
+        return json_encode($posts);
+    }
+
+    public function getKRS(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header("Content-type: application/json");
+
+
+        if($data){
+            $posts=array('response'=>'success','data'=>$data,'header'=>$header);
+        }else{
+            $posts=array('response'=>'success','data'=>array(),'header'=>$header);
+        }
+
+        return json_encode($posts);
+    }
+
+    public function export_krs($id)
+    {
+        return Excel::download(new talentMappingFinal($id), 'talent-mapping-export.xlsx');
+    }
+    public function export_krs_batch2($id)
+    {
+        return Excel::download(new talentMappingFinalBatch2($id), 'talent-mapping-export-kotak-789.xlsx');
+    }
+
+
+}
