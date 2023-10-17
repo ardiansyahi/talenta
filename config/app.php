@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://10.206.102.65/talenta/public'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -162,8 +162,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Providers\GlobalProvider::class,
-       
-        
+
+
 
         /*
          * Package Service Providers...

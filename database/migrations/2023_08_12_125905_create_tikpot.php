@@ -33,7 +33,7 @@ class CreateTikpot extends Migration
             $table->string('warna',25)->nullable();
             $table->integer('nourut')->nullable();
             $table->timestamps();
-            $table->foreign('id_master')->references('id')->on('tikpot')->onDelete('cascade');
+            $table->foreign('id_master')->references('id')->on('talenta_tikpot')->onDelete('cascade');
         });
     }
 
