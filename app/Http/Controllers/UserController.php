@@ -32,7 +32,7 @@ class UserController extends Controller
         if($request->name !=''){
             $data->where('name','like','%'.$request->name.'%');
         }
-        $data->join('talenta_akses','talenta_sers.id_akses','=','talenta_akses.id');
+        $data->join('talenta_akses','talenta_users.id_akses','=','talenta_akses.id');
         $data->get();
 
         return DataTables::of($data)

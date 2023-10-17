@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://10.206.102.65/talenta/public'),
+    'url' => env('APP_URL', null),
 
     'asset_url' => env('ASSET_URL', null),
 

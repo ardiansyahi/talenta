@@ -372,7 +372,7 @@ class GlobalHelper {
     }
 
     public static function cekAkses($userid,$id){
-        $akses=AksesModel::select('akses.id_form')->join('talenta_users','akses.id','=','talenta_users.id_akses')
+        $akses=AksesModel::select('talenta_akses.id_form')->join('talenta_users','talenta_akses.id','=','talenta_users.id_akses')
                 ->where('talenta_users.userid','=',$userid)->first();
         if (array_search($id, json_decode($akses->id_form))){
             return true;
