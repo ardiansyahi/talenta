@@ -13,7 +13,7 @@ class CreatePegawai extends Migration
      */
     public function up()
     {
-        Schema::create('pegawai', function (Blueprint $table) {
+        Schema::create('talenta_pegawai', function (Blueprint $table) {
             $table->id();
             $table->string('pegawaiID',50)->nullable();
             $table->string('nip',50)->nullable();
@@ -41,7 +41,7 @@ class CreatePegawai extends Migration
         });
     }
 
-            
+
 
     /**
      * Reverse the migrations.
@@ -50,6 +50,6 @@ class CreatePegawai extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pegawai');
+        Schema::dropIfExists('talenta_pegawai');
     }
 }

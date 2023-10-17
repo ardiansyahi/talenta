@@ -13,7 +13,7 @@ class CreateRwdiklatKonfig extends Migration
      */
     public function up()
     {
-        Schema::create('rwdiklat_konfig', function (Blueprint $table) {
+        Schema::create('talenta_rwdiklat_konfig', function (Blueprint $table) {
             $table->id();
             $table->string('nama',255)->nullable();
             $table->string('created_by','150')->nullable();
@@ -28,6 +28,6 @@ class CreateRwdiklatKonfig extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rwdiklat_konfig');
+        Schema::dropIfExists('talenta_rwdiklat_konfig');
     }
 }

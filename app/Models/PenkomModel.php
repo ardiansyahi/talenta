@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PenkomModel extends Model
 {
     use HasFactory;
-    protected $table='penkom';
+    protected $table='talenta_penkom';
     protected $fillable=[
         'nip','nama','jenis','tahun',
         'pangkat','jabatan','unit_kerja','golongan',

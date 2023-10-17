@@ -53,7 +53,7 @@ class QTikPotController
             $param .=" Where  nama LIKE '%".$nama."%' ";
         }
 
-        $data= DB::select("select id,nama FROM tikpot ".$param."");
+        $data= DB::select("select id,nama FROM talenta_tikpot ".$param."");
 
         return DataTables::of($data)
                     ->addIndexColumn()

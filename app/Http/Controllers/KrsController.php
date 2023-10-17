@@ -156,7 +156,7 @@ class KrsController extends Controller
     public function konfigurasiStep3($id){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
             $data=DB::select("select id, tahun, deskripsi, batch,jenis
-                        FROM krs
+                        FROM talenta_krs
                         WHERE id='".$id."'
                         Order By tahun,id desc
                         ");
@@ -242,23 +242,23 @@ class KrsController extends Controller
 
         Krs_temp_model::whereId_krs($id)->delete();
 
-        $kueri=KrsPegawaiTemplateModel::select('krs_pegawai_template.nip','krs_pegawai_template.nama_lengkap',
-                                        'krs_pegawai_template.tgl_lahir','krs_pegawai_template.pendidikan',
-                                        'krs_pegawai_template.eselon','krs_pegawai_template.level_jabatan',
-                                        'krs_pegawai_template.satker','krs_pegawai_template.nama_jabatan',
-                                        'krs_pegawai_template.tmt_jabatan',
-                                        'krs_pegawai_template.tahun_penkom',
-                                        'krs_pegawai_template.mansoskul',
-                                        'krs_pegawai_template.generik',
-                                        'krs_pegawai_template.spesifik',
-                                        'krs_pegawai_template.pangkat','krs_pegawai_template.golongan',
-                                        'rwjabatan_hitung.total as ttl_jabatan',
-                                        'rwdiklat_hitung.diklat_struktural',
-                                        'rwdiklat_hitung.diklat_teknis')
-                ->join('rwdiklat_hitung','rwdiklat_hitung.nip','=','krs_pegawai_template.nip')
-                ->join('rwjabatan_hitung','rwjabatan_hitung.nip','=','krs_pegawai_template.nip')
-                ->distinct('krs_pegawai_template.nip')
-                ->where('krs_pegawai_template.id_krs','=',$id)->get();
+        $kueri=KrsPegawaiTemplateModel::select('talenta_krs_pegawai_template.nip','talenta_krs_pegawai_template.nama_lengkap',
+                                        'talenta_krs_pegawai_template.tgl_lahir','talenta_krs_pegawai_template.pendidikan',
+                                        'talenta_krs_pegawai_template.eselon','talenta_krs_pegawai_template.level_jabatan',
+                                        'talenta_krs_pegawai_template.satker','talenta_krs_pegawai_template.nama_jabatan',
+                                        'talenta_krs_pegawai_template.tmt_jabatan',
+                                        'talenta_krs_pegawai_template.tahun_penkom',
+                                        'talenta_krs_pegawai_template.mansoskul',
+                                        'talenta_krs_pegawai_template.generik',
+                                        'talenta_krs_pegawai_template.spesifik',
+                                        'talenta_krs_pegawai_template.pangkat','talenta_krs_pegawai_template.golongan',
+                                        'talenta_rwjabatan_hitung.total as ttl_jabatan',
+                                        'talenta_rwdiklat_hitung.diklat_struktural',
+                                        'talenta_rwdiklat_hitung.diklat_teknis')
+                ->join('talenta_rwdiklat_hitung','talenta_rwdiklat_hitung.nip','=','talenta_krs_pegawai_template.nip')
+                ->join('talenta_rwjabatan_hitung','talenta_rwjabatan_hitung.nip','=','talenta_krs_pegawai_template.nip')
+                ->distinct('talenta_krs_pegawai_template.nip')
+                ->where('talenta_krs_pegawai_template.id_krs','=',$id)->get();
 
         $bobotJabatan=GlobalHelper::getDataKonfig($id,'bobot_rwjabatan','bobot');
         $bobotDiklat=GlobalHelper::getDataKonfig($id,'bobot_diklat','bobot');
@@ -348,12 +348,12 @@ class KrsController extends Controller
     }
 
     public function simpankonfig(Request $request){
-        $kueri=PegawaiTalentaModel::select('pegawai.pegawaiID','pegawai.nip','pegawai.thnpns','pegawai.nama_lengkap',
-                                        'pegawai.tgl_lahir','pegawai.pendidikan','pegawai.eselon','pegawai.tmteselon',
-                                        'pegawai.pangkat','pegawai.golongan','pegawai.tmtpangkat','pegawai.level_jabatan',
-                                        'pegawai.nama_jabatan','pegawai.tmt_jabatan','pegawai.satker','pegawai.tipepegawai',
-                                        'pegawai.statuspegawai','pegawai.kedudukan','penkom.mansoskul',
-                                        'penkom.teknis_generik','penkom.teknis_spesifik','penkom.tahun');
+        $kueri=PegawaiTalentaModel::select('talenta_pegawai.pegawaiID','talenta_pegawai.nip','talenta_pegawai.thnpns','talenta_pegawai.nama_lengkap',
+                                        'talenta_pegawai.tgl_lahir','talenta_pegawai.pendidikan','talenta_pegawai.eselon','talenta_pegawai.tmteselon',
+                                        'talenta_pegawai.pangkat','talenta_pegawai.golongan','talenta_pegawai.tmtpangkat','talenta_pegawai.level_jabatan',
+                                        'talenta_pegawai.nama_jabatan','talenta_pegawai.tmt_jabatan','talenta_pegawai.satker','talenta_pegawai.tipepegawai',
+                                        'talenta_pegawai.statuspegawai','talenta_pegawai.kedudukan','talenta_penkom.mansoskul',
+                                        'talenta_penkom.teknis_generik','talenta_penkom.teknis_spesifik','talenta_penkom.tahun');
 
 
         $master=GlobalHelper::getKrs($request->id);
@@ -459,64 +459,64 @@ class KrsController extends Controller
                     case "umur":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.tgl_lahir',$request->param[$key],$newdate);
+                        $kueri=$kueri->where('talenta_pegawai.tgl_lahir',$request->param[$key],$newdate);
                         break;
                     case "pns":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Ym', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.thnpns',$request->param[$key],$newdate) ;
+                        $kueri=$kueri->where('talenta_pegawai.thnpns',$request->param[$key],$newdate) ;
                         break;
                     case "pendidikan":
-                        $kueri->whereIn('pegawai.pendidikan',$request->ck_pendidikan_value);
+                        $kueri->whereIn('talenta_pegawai.pendidikan',$request->ck_pendidikan_value);
                         break;
                     case "eselon":
-                        $kueri->whereIn('pegawai.eselon',$request->ck_eselon_value);
+                        $kueri->whereIn('talenta_pegawai.eselon',$request->ck_eselon_value);
                         break;
                     case "tmt_eselon":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.tmteselon',$request->param[$key],$newdate);
+                        $kueri=$kueri->where('talenta_pegawai.tmteselon',$request->param[$key],$newdate);
                         break;
                     case "pangkat":
-                        $kueri->whereIn('pegawai.pangkat',$request->ck_pangkat_value);
+                        $kueri->whereIn('talenta_pegawai.pangkat',$request->ck_pangkat_value);
                         break;
                     case "golongan":
-                        $kueri->whereIn('pegawai.golongan',$request->ck_golongan_value);
+                        $kueri->whereIn('talenta_pegawai.golongan',$request->ck_golongan_value);
                         break;
                     case "tmt_pangkat":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.tmtpangkat',$request->param[$key],$newdate);
+                        $kueri=$kueri->where('talenta_pegawai.tmtpangkat',$request->param[$key],$newdate);
                         break;
                     case "level_jabatan":
-                        $kueri->whereIn('pegawai.level_jabatan',$request->ck_lvl_jabatan_value);
+                        $kueri->whereIn('talenta_pegawai.level_jabatan',$request->ck_lvl_jabatan_value);
                         break;
                     case "tmt_jabatan":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.tmt_jabatan',$request->param[$key],$newdate);
+                        $kueri=$kueri->where('talenta_pegawai.tmt_jabatan',$request->param[$key],$newdate);
                         break;
                     case "satker":
                         $date = strtotime(GlobalHelper::changeDate('1', $request->isi_det[$key]).' -'.$request->isi[$key].' year');
                         $newdate= date('Y-m-d', $date); // echoes '2009-01-01'
-                        $kueri=$kueri->where('pegawai.satker',$request->param[$key],$newdate);
+                        $kueri=$kueri->where('talenta_pegawai.satker',$request->param[$key],$newdate);
                         break;
                     case "tipe_pegawai":
-                        $kueri->whereIn('pegawai.tipepegawai',$request->ck_tipe_pegawai_value);
+                        $kueri->whereIn('talenta_pegawai.tipepegawai',$request->ck_tipe_pegawai_value);
                         break;
                     case "status_pegawai":
-                        $kueri->whereIn('pegawai.statuspegawai',$request->ck_status_pegawai_value);
+                        $kueri->whereIn('talenta_pegawai.statuspegawai',$request->ck_status_pegawai_value);
                         break;
                 }
             }
 
 
         }
-        $kueri->join('penkom','penkom.nip','=','pegawai.nip')
-                ->distinct('pegawai.nip')
-                ->where('penkom.tahun','>=',$request->tahun_penkom)
-                ->where('penkom.tahun','<=',$tahun_krs)
-                ->where('penkom.jenis','=',$request->jenis_penkom);
+        $kueri->join('talenta_penkom','talenta_penkom.nip','=','talenta_pegawai.nip')
+                ->distinct('talenta_pegawai.nip')
+                ->where('talenta_penkom.tahun','>=',$request->tahun_penkom)
+                ->where('talenta_penkom.tahun','<=',$tahun_krs)
+                ->where('talenta_penkom.jenis','=',$request->jenis_penkom);
         $finalQ=$kueri->get();
 
         KrsPegawaiTemplateModel::whereId_krs($request->id)->whereCreated_by(Auth::user()->userid)->delete();
@@ -790,10 +790,10 @@ class KrsController extends Controller
     public function getdetailkrs(Request $request){
         $param='';
        // if ($request->ajax()) {
-            $data= KrsFinalModel::select('krs_final.nip','krs_final.nilai','pegawai.pangkat','pegawai.golongan','pegawai.nama_lengkap')
-                    ->join('pegawai','pegawai.nip','=','krs_final.nip')
+            $data= KrsFinalModel::select('talenta_krs_final.nip','talenta_krs_final.nilai','talenta_pegawai.pangkat','talenta_pegawai.golongan','talenta_pegawai.nama_lengkap')
+                    ->join('talenta_pegawai','talenta_pegawai.nip','=','talenta_krs_final.nip')
                     ->where('id_krs','=',$request->id_krs)->whereJenis('isi')
-                    ->orderBy('krs_final.id','asc')
+                    ->orderBy('talenta_krs_final.id','asc')
                     ->get();
 
             return DataTables::of($data)
@@ -845,10 +845,10 @@ class KrsController extends Controller
     public function getDaftarUsulan(Request $request){
         $param='';
        // if ($request->ajax()) {
-            $data= KrsAdminTemplateModel::select('krs_pegawai_temp_admin.id_krs','krs_pegawai_temp_admin.nip','krs_pegawai_temp_admin.nilai','pegawai.pangkat','pegawai.golongan','pegawai.nama_lengkap')
-                    ->join('pegawai','pegawai.nip','=','krs_pegawai_temp_admin.nip')
+            $data= KrsAdminTemplateModel::select('talenta_krs_final.krs_pegawai_temp_admin.id_krs','talenta_krs_final.krs_pegawai_temp_admin.nip','talenta_krs_final.krs_pegawai_temp_admin.nilai','talenta_pegawai.pangkat','talenta_pegawai.golongan','talenta_pegawai.nama_lengkap')
+                    ->join('talenta_pegawai','talenta_pegawai.nip','=','talenta_krs_final.krs_pegawai_temp_admin.nip')
                     ->where('id_krs','=',$request->id_krs)->whereJenis('isi')
-                    ->orderBy('krs_pegawai_temp_admin.id','asc')
+                    ->orderBy('talenta_krs_final.krs_pegawai_temp_admin.id','asc')
                     ->get();
 
             return DataTables::of($data)

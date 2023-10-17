@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KrsHeaderModel extends Model
 {
     use HasFactory;
-    protected $table='krs_header';
+    protected $table='talenta_krs_header';
     protected $fillable=[
         'id_krs',
         'pegawai',
@@ -16,6 +16,6 @@ class KrsHeaderModel extends Model
         'kinerja',
         'header',
         'created_by',
-       
+
     ];
 }

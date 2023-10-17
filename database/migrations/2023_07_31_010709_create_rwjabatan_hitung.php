@@ -13,7 +13,7 @@ class CreateRwjabatanHitung extends Migration
      */
     public function up()
     {
-        Schema::create('rwjabatan_hitung', function (Blueprint $table) {
+        Schema::create('talenta_rwjabatan_hitung', function (Blueprint $table) {
             $table->id();
             $table->string('nip',50)->nullable();
             $table->string('nama',255)->nullable();
@@ -30,6 +30,6 @@ class CreateRwjabatanHitung extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rwjabatan_hitung');
+        Schema::dropIfExists('talenta_rwjabatan_hitung');
     }
 }

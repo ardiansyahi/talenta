@@ -13,7 +13,7 @@ class CreatePenkom extends Migration
      */
     public function up()
     {
-        Schema::create('penkom', function (Blueprint $table) {
+        Schema::create('talenta_penkom', function (Blueprint $table) {
             $table->id();
             $table->string('nip',50)->nullable();
             $table->string('nama',250)->nullable();
@@ -40,6 +40,6 @@ class CreatePenkom extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penkom');
+        Schema::dropIfExists('talenta_penkom');
     }
 }

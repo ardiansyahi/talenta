@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AksesModel extends Model
 {
     use HasFactory;
-    protected $table='akses';
+    protected $table='talenta_akses';
     protected $fillable=['nama','id_form','isdeleted','created_by','modified_by'];
 }

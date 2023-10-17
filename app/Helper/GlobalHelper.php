@@ -41,7 +41,7 @@ class GlobalHelper {
 
     }
     public static function getNipPegawai($param) {
-        $kueri= DB::table('pegawai')
+        $kueri= DB::table('talenta_pegawai')
                 ->select('nip','nama_lengkap')
                 ->where('nip','like','%'.$param.'%')
                 ->orWhere(DB::raw('lower(nama_lengkap)'), "LIKE", "%".strtolower($param)."%")
@@ -71,7 +71,7 @@ class GlobalHelper {
         return $kueri;
     }
     public static function getNamaNipPegawai($param) {
-        $kueri= DB::table('pegawai')
+        $kueri= DB::table('talenta_pegawai')
                 ->select('nip','nama_lengkap')
                 ->where('nip','like','%'.$param.'%')
                 ->first();
@@ -80,7 +80,7 @@ class GlobalHelper {
     }
 
     public static function getNamaRWByNip($param) {
-        $kueri= DB::table('rwdiklat')
+        $kueri= DB::table('talenta_rwdiklat')
                 ->select('nip','nama')
                 ->where('nip','like','%'.$param.'%')
                 ->first();
@@ -89,7 +89,7 @@ class GlobalHelper {
     }
 
     public static function getNamaRWJByNip($param) {
-        $kueri= DB::table('rwjabatan')
+        $kueri= DB::table('talenta_rwjabatan')
                 ->select('nip','nama')
                 ->where('nip','like','%'.$param.'%')
                 ->first();
@@ -97,7 +97,7 @@ class GlobalHelper {
         return $kueri;
     }
     public static function getNIPRW($param) {
-        $kueri= DB::table('rwdiklat')
+        $kueri= DB::table('talenta_rwdiklat')
         ->select('nip','nama')
         ->distinct('nip')
         ->where('nip','like','%'.$param.'%')
@@ -121,7 +121,7 @@ class GlobalHelper {
     }
 
     public static function getNIPRWJ($param) {
-        $kueri= DB::table('rwjabatan')
+        $kueri= DB::table('talenta_rwjabatan')
         ->select('nip','nama')
         ->distinct('nip')
         ->where('nip','like','%'.$param.'%')
@@ -372,8 +372,8 @@ class GlobalHelper {
     }
 
     public static function cekAkses($userid,$id){
-        $akses=AksesModel::select('akses.id_form')->join('users','akses.id','=','users.id_akses')
-                ->where('users.userid','=',$userid)->first();
+        $akses=AksesModel::select('akses.id_form')->join('talenta_users','akses.id','=','talenta_users.id_akses')
+                ->where('talenta_users.userid','=',$userid)->first();
         if (array_search($id, json_decode($akses->id_form))){
             return true;
         }else{

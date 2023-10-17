@@ -13,7 +13,7 @@ class CreateUrlkonfig extends Migration
      */
     public function up()
     {
-        Schema::create('urlkonfig', function (Blueprint $table) {
+        Schema::create('talenta_urlkonfig', function (Blueprint $table) {
             $table->id();
             $table->text('url')->nullable();
             $table->integer('port')->nullable();
@@ -32,6 +32,6 @@ class CreateUrlkonfig extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('urlkonfig');
+        Schema::dropIfExists('talenta_urlkonfig');
     }
 }

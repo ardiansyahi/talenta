@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LogsModel extends Model
 {
     use HasFactory;
-    protected $table='logs';
+    protected $table='talenta_logs';
     protected $fillable=[
         'module',
         'action',
@@ -26,7 +26,7 @@ class LogsModel extends Model
             'userid'=>$request['userid'],
             'created_at'=>now()
         ]);
-        
-        
+
+
     }
 }

@@ -64,7 +64,7 @@ class QRwJabatanController
                 RwJabatanModel::truncate();
                 RwJabatanHitungModel::truncate();
                 $err = curl_error($api);
-                
+
                 if ($err) {
                     $posts = array('respon' => 'error', 'message' => $err, 'tipe' => 'error_curl');
                     return response()->json($posts, 400);
@@ -132,7 +132,7 @@ class QRwJabatanController
             $param .=" Where  nip ='".$nip."' ";
         }
 
-        $data= DB::select("select nip,nama,total FROM rwjabatan_hitung ".$param."");
+        $data= DB::select("select nip,nama,total FROM talenta_rwjabatan_hitung ".$param."");
 
          return DataTables::of($data)
             ->addIndexColumn()

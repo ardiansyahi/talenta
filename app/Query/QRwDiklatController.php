@@ -141,8 +141,8 @@ class QRwDiklatController
 
 
         $data= DB::select("select distinct(a.nip), b.nama ,a.diklat_teknis, a.diklat_struktural
-                         from rwdiklat_hitung as a
-                         JOIN rwdiklat as b on a.nip=b.nip ".$param."");
+                         from talenta_rwdiklat_hitung as a
+                         JOIN talenta_rwdiklat as b on a.nip=b.nip ".$param."");
 
          return DataTables::of($data)
             ->addIndexColumn()

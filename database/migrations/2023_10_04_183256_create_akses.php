@@ -13,7 +13,7 @@ class CreateAkses extends Migration
      */
     public function up()
     {
-        Schema::create('akses', function (Blueprint $table) {
+        Schema::create('talenta_akses', function (Blueprint $table) {
             $table->id();
             $table->string('nama',250)->nullable();
             $table->text('id_form')->nullable();
@@ -31,6 +31,6 @@ class CreateAkses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('akses');
+        Schema::dropIfExists('talenta_akses');
     }
 }

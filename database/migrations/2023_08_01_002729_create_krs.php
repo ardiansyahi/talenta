@@ -13,7 +13,7 @@ class CreateKrs extends Migration
      */
     public function up()
     {
-        Schema::create('krs', function (Blueprint $table) {
+        Schema::create('talenta_krs', function (Blueprint $table) {
             $table->id();
             $table->string('tahun',4)->nullable();
             $table->integer('batch')->nullable();
@@ -36,6 +36,6 @@ class CreateKrs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('krs');
+        Schema::dropIfExists('talenta_krs');
     }
 }

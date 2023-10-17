@@ -13,7 +13,7 @@ class CreateKrsHeader extends Migration
      */
     public function up()
     {
-        Schema::create('krs_header', function (Blueprint $table) {
+        Schema::create('talenta_krs_header', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->longText('pegawai')->nullable();
@@ -24,7 +24,7 @@ class CreateKrsHeader extends Migration
             $table->timestamps();
         });
 
-        Schema::create('krs_bobot', function (Blueprint $table) {
+        Schema::create('talenta_krs_bobot', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->longText('jenis')->nullable();
@@ -34,7 +34,7 @@ class CreateKrsHeader extends Migration
             $table->timestamps();
         });
 
-        Schema::create('krs_final', function (Blueprint $table) {
+        Schema::create('talenta_krs_final', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->string('nip')->nullable();
@@ -56,8 +56,8 @@ class CreateKrsHeader extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('krs_header');
-        Schema::dropIfExists('krs_bobot');
-        Schema::dropIfExists('krs_final');
+        Schema::dropIfExists('talenta_krs_header');
+        Schema::dropIfExists('talenta_krs_bobot');
+        Schema::dropIfExists('talenta_krs_final');
     }
 }

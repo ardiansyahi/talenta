@@ -78,16 +78,16 @@ class RwdiklatController extends Controller
         try{
 
             if($request->type=='delete'){
-                DB::table('rwdiklat_konfig')->whereId($request->id)->delete();
+                DB::table('talenta_rwdiklat_konfig')->whereId($request->id)->delete();
             }else{
-                DB::table('rwdiklat_konfig')->insert([
+                DB::table('talenta_rwdiklat_konfig')->insert([
                     'nama'=>htmlspecialchars($request->nama),
                     'created_by'=>Auth::user()->userid,
                     'created_at'=>now()
                 ]);
             }
 
-            $data=DB::table('rwdiklat_konfig')->orderBy('id','desc')->get();
+            $data=DB::table('talenta_rwdiklat_konfig')->orderBy('id','desc')->get();
             $post=array('respon'=>'success','data'=>$data);
             return response()->json($post);
 

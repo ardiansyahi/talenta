@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Konfigurasi_detail_Model extends Model
 {
     use HasFactory;
-    protected $table='konfigurasi_detail';
+    protected $table='talenta_konfigurasi_detail';
     protected $fillable=['jenis','kriteria','isidata'];
 }

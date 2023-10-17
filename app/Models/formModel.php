@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class formModel extends Model
 {
     use HasFactory;
-    protected $table='form';
+    protected $table='talenta_form';
     protected $fillable=['nama','jenis','id_root','created_by'];
 }

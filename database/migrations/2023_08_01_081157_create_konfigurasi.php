@@ -13,7 +13,7 @@ class CreateKonfigurasi extends Migration
      */
     public function up()
     {
-        Schema::create('konfigurasi_krs', function (Blueprint $table) {
+        Schema::create('talenta_konfigurasi_krs', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->string('jenis','35')->nullable();
@@ -22,7 +22,7 @@ class CreateKonfigurasi extends Migration
             $table->string('created_by',100)->nullable();
             $table->timestamps();
             $table->string('updated_by',100)->nullable();
-            
+
         });
     }
 
@@ -33,6 +33,6 @@ class CreateKonfigurasi extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('konfigurasi_krs');
+        Schema::dropIfExists('talenta_konfigurasi_krs');
     }
 }

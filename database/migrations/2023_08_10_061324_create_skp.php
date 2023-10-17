@@ -13,7 +13,7 @@ class CreateSkp extends Migration
      */
     public function up()
     {
-        Schema::create('skp', function (Blueprint $table) {
+        Schema::create('talenta_skp', function (Blueprint $table) {
             $table->id();
             $table->string('pegawaiID',50)->nullable();
             $table->string('nip',50)->nullable();
@@ -37,6 +37,6 @@ class CreateSkp extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('skp');
+        Schema::dropIfExists('talenta_skp');
     }
 }

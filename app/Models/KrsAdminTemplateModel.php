@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KrsAdminTemplateModel extends Model
 {
     use HasFactory;
-    protected $table='krs_pegawai_temp_admin';
+    protected $table='talenta_krs_pegawai_temp_admin';
     protected $fillable=[
         'id_krs',
         'id_krs_awal',

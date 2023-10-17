@@ -17,6 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table='talenta_users';
     protected $fillable = [
         'userid',
         'name',

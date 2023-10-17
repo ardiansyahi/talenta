@@ -13,7 +13,7 @@ class CreateRwdiklat extends Migration
      */
     public function up()
     {
-        Schema::create('rwdiklat', function (Blueprint $table) {
+        Schema::create('talenta_rwdiklat', function (Blueprint $table) {
             $table->id();
             $table->string('pegawaiID',50)->nullable();
             $table->string('nip',50)->nullable();
@@ -35,6 +35,6 @@ class CreateRwdiklat extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rwdiklat');
+        Schema::dropIfExists('talenta_rwdiklat');
     }
 }

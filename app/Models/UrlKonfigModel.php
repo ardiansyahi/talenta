@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UrlKonfigModel extends Model
 {
     use HasFactory;
-    protected $table='urlkonfig';
+    protected $table='talenta_urlkonfig';
     protected $fillable=[
         'url','port','method','uid','pass','jenis'
     ];

@@ -13,7 +13,7 @@ class CreateKrsPegawaiTemplate extends Migration
      */
     public function up()
     {
-        Schema::create('krs_pegawai_template', function (Blueprint $table) {
+        Schema::create('talenta_krs_pegawai_template', function (Blueprint $table) {
             $table->id();
             $table->string('pegawaiID',50)->nullable();
             $table->string('nip',50)->nullable();
@@ -53,6 +53,6 @@ class CreateKrsPegawaiTemplate extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('krs_pegawai_template');
+        Schema::dropIfExists('talenta_krs_pegawai_template');
     }
 }

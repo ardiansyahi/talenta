@@ -13,7 +13,7 @@ class CreateTableLogs extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('talenta_logs', function (Blueprint $table) {
             $table->id();
             $table->string('module',200)->nullable();
             $table->string('action',25)->nullable();
@@ -31,6 +31,6 @@ class CreateTableLogs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('talenta_logs');
     }
 }

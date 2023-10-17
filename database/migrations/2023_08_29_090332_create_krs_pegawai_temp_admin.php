@@ -13,7 +13,7 @@ class CreateKrsPegawaiTempAdmin extends Migration
      */
     public function up()
     {
-        Schema::create('krs_pegawai_temp_admin', function (Blueprint $table) {
+        Schema::create('talenta_krs_pegawai_temp_admin', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->integer('id_krs_awal')->nullable();
@@ -40,6 +40,6 @@ class CreateKrsPegawaiTempAdmin extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('krs_pegawai_temp_admin');
+        Schema::dropIfExists('talenta_krs_pegawai_temp_admin');
     }
 }

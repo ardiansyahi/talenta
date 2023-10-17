@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KrsPegawaiTemplateModel extends Model
 {
     use HasFactory;
-    protected $table='krs_pegawai_template';
+    protected $table='talenta_krs_pegawai_template';
     protected $fillable=[
         'pegawaiID',
         'nip',

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TikpodModel extends Model
 {
     use HasFactory;
-    protected $table='tikpot';
+    protected $table='talenta_tikpot';
     protected $fillable=[
         'nama',
         'status',

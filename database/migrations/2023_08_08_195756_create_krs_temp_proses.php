@@ -13,7 +13,7 @@ class CreateKrsTempProses extends Migration
      */
     public function up()
     {
-        Schema::create('krs_temp_proses', function (Blueprint $table) {
+        Schema::create('talenta_krs_temp_proses', function (Blueprint $table) {
             $table->id();
             $table->integer('id_krs')->nullable();
             $table->string('jenis',25)->nullable();
@@ -59,6 +59,6 @@ class CreateKrsTempProses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('krs_temp_proses');
+        Schema::dropIfExists('talenta_krs_temp_proses');
     }
 }

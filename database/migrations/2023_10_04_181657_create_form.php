@@ -13,7 +13,7 @@ class CreateForm extends Migration
      */
     public function up()
     {
-        Schema::create('form', function (Blueprint $table) {
+        Schema::create('talenta_form', function (Blueprint $table) {
             $table->id();
             $table->string('nama',250)->nullable();
             $table->string('jenis',10)->nullable();
@@ -30,6 +30,6 @@ class CreateForm extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form');
+        Schema::dropIfExists('talenta_form');
     }
 }

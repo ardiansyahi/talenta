@@ -13,7 +13,7 @@ class CreateTikpot extends Migration
      */
     public function up()
     {
-        Schema::create('tikpot', function (Blueprint $table) {
+        Schema::create('talenta_tikpot', function (Blueprint $table) {
             $table->id();
             $table->string('nama',255)->nullable();
             $table->string('status',1)->nullable();
@@ -22,7 +22,7 @@ class CreateTikpot extends Migration
             $table->string('modified_by',255)->nullable();
         });
 
-        Schema::create('tikpot_detail', function (Blueprint $table) {
+        Schema::create('talenta_tikpot_detail', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_master');
             $table->string('nama',255)->nullable();
@@ -44,12 +44,12 @@ class CreateTikpot extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tikpot_detail',function(Blueprint $table){
+        Schema::dropIfExists('talenta_tikpot_detail',function(Blueprint $table){
             $table->dropForeign('tikpot_detail_id_master_foreign');
             $table->dropIndex('tikpot_detail_id_master_index');
             $table->dropColumn('id_master');
         });
-        Schema::dropIfExists('tikpot');
-        
+        Schema::dropIfExists('talenta_tikpot');
+
     }
 }

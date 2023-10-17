@@ -25,14 +25,14 @@ class UserController extends Controller
 
     public function getUser(Request $request){
 
-        $data=DB::table('users')->select('users.id','users.userid','users.name','akses.nama');
+        $data=DB::table('talenta_users')->select('talenta_users.id','talenta_users.userid','talenta_users.name','talenta_akses.nama');
         if($request->userid !=''){
             $data->where('userid','like','%'.$request->userid.'%');
         }
         if($request->name !=''){
             $data->where('name','like','%'.$request->name.'%');
         }
-        $data->join('akses','users.id_akses','=','akses.id');
+        $data->join('talenta_akses','talenta_sers.id_akses','=','talenta_akses.id');
         $data->get();
 
         return DataTables::of($data)

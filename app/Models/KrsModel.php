@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KrsModel extends Model
 {
     use HasFactory;
-    protected $table='krs';
+    protected $table='talenta_krs';
     protected $fillable=[
         'tahun','batch','jenis','deskripsi','created_by','updated_by','created_at','updated_at','fileupload','id_tikpot','id_krs_awal','status'
     ];

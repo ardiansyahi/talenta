@@ -82,7 +82,7 @@ class ReportPegawaiController extends Controller
             }
 
             $data= DB::select("select nip,nama_lengkap,pangkat,statuspegawai,golongan,eselon,pendidikan,kedudukan
-                             FROM pegawai ".$param."");
+                             FROM talenta_pegawai ".$param."");
 
              return DataTables::of($data)
                 ->addIndexColumn()

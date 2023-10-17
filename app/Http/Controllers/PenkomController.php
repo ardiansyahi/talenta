@@ -21,7 +21,7 @@ class PenkomController extends Controller
         if(GlobalHelper::cekAkses(Auth::user()->userid,"7")){
             $rr=array('module'=>'upload penkom','action'=>'view','deskripsi'=>'membuka halaman Upload Penkom','res'=>'success','userid'=>session()->get('nip'));
             LogsModel::saveLogs($rr);
-            $data=DB::table('penkom')
+            $data=DB::table('talenta_penkom')
                     ->select('jenis', 'tahun','hashname')
                     ->distinct()
                     ->orderBy('tahun','desc')
@@ -106,7 +106,7 @@ class PenkomController extends Controller
     }
     public function getPenkom(Request $request){
         if ($request->ajax()) {
-            $kueri= DB::table('penkom');
+            $kueri= DB::table('talenta_penkom');
             if($request->nip !=''){
             $kueri->where('nip','=',$request->nip);
             }
@@ -125,7 +125,7 @@ class PenkomController extends Controller
 
     public function getPenkomDetail(Request $request){
         if ($request->ajax()) {
-            $kueri= DB::table('penkom');
+            $kueri= DB::table('talenta_penkom');
             if($request->hashname !=''){
             $kueri->where('hashname','=',$request->hashname);
             }

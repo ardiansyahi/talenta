@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SkpModel extends Model
 {
     use HasFactory;
-    protected $table='skp';
+    protected $table='talenta_skp';
     protected $fillable=[
         'pegawaiID',
         'nip',

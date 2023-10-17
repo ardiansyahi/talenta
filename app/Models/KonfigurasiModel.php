@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KonfigurasiModel extends Model
 {
     use HasFactory;
-    protected $table='konfigurasi_krs';
+    protected $table='talenta_konfigurasi_krs';
     protected $fillable=[
         'id_krs',
         'jenis',
@@ -17,6 +17,6 @@ class KonfigurasiModel extends Model
         'created_by',
         'updated_by'
     ];
-   
+
 
 }
