@@ -22,11 +22,11 @@ class UrlKonfigSeeder extends Seeder
         //     ["url"=>"https://simpeg.atrbpn.go.id/api_simpeg/service_itms/getSKP","jenis"=>"skp","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
         // ];
         $data=[
-            ["url"=>"http://127.0.0.1:8082/apitalenta/gettoken.json","jenis"=>"token","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
-            ["url"=>"http://127.0.0.1:8082/apitalenta/DataPegawai.json","jenis"=>"pegawai","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
-            ["url"=>"http://127.0.0.1:8082/apitalenta/RiwayatJabatan.json","jenis"=>"rwjabatan","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
-            ["url"=>"http://127.0.0.1:8082/apitalenta/RiwayatDiklat.json","jenis"=>"rwdiklat","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
-            ["url"=>"http://127.0.0.1:8082/Data_SKP.json","jenis"=>"skp","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
+            ["url"=>"http://127.0.0.1:80/apitalenta/gettoken.json","jenis"=>"token","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
+            ["url"=>"http://127.0.0.1:80/apitalenta/DataPegawai.json","jenis"=>"pegawai","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
+            ["url"=>"http://127.0.0.1:80/apitalenta/RiwayatJabatan.json","jenis"=>"rwjabatan","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
+            ["url"=>"http://127.0.0.1:80/apitalenta/RiwayatDiklat.json","jenis"=>"rwdiklat","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
+            ["url"=>"http://127.0.0.1:80/apitalenta/Data_SKP.json","jenis"=>"skp","method"=>"POST","uid"=>"api-simpeg","pass"=>"simpeg2021"],
         ];
         foreach($data as $rw){
             UrlKonfigModel::create($rw);

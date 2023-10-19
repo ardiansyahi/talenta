@@ -93,7 +93,7 @@ class QRwDiklatController
                             "SELECT nip,
                             COUNT(CASE WHEN jenis = '2' THEN 1 END) as t1,
                             COUNT(CASE WHEN diklat_struktural = 'Sesuai'  THEN 1 END)  as dk
-                            FROM rwdiklat group by nip order by nip asc"
+                            FROM talenta_rwdiklat group by nip order by nip asc"
                         );
                         foreach($kueri as $key => $item){
                             if($item->dk > 0){$diklat_s="Sesuai";}else{$diklat_s="Tidak Sesuai";}

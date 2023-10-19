@@ -90,7 +90,7 @@ class QRwJabatanController
                         }
                         $kueri=DB::select(
                             "SELECT nip,count(nip) as total
-                            FROM rwjabatan group by nip"
+                            FROM talenta_rwjabatan group by nip"
                         );
                         foreach($kueri as $key => $item){
                             $nm=GlobalHelper::getNamaNipPegawai($item->nip);

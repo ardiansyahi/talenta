@@ -93,15 +93,15 @@ class QPegawaiController
                                 'created_by'=>Auth::user()->userid,
                             ]);
 
-                            $dt=array(
-                                'userid'=>$json['PegawaiKRS'][$i]['NIPBARU'],
-                                'name'=>$json['PegawaiKRS'][$i]['NAMA_LENGKAP'],
-                                'password'=>bcrypt('password'),
-                                'isActive'=>0,
-                                'id_akses'=>5,
-                                'email'=>'',
-                            );
-                            GlobalHelper::cekUser($dt,$json['PegawaiKRS'][$i]['NIPBARU']);
+                            // $dt=array(
+                            //     'userid'=>$json['PegawaiKRS'][$i]['NIPBARU'],
+                            //     'name'=>$json['PegawaiKRS'][$i]['NAMA_LENGKAP'],
+                            //     'password'=>bcrypt('password'),
+                            //     'isActive'=>0,
+                            //     'id_akses'=>5,
+                            //     'email'=>'',
+                            // );
+                            // GlobalHelper::cekUser($dt,$json['PegawaiKRS'][$i]['NIPBARU']);
 
                         }
                         $rr=array('module'=>'master pegawai','action'=>'tarik data','deskripsi'=>'Tarik Data Pegawai terbaru','res'=>'success','userid'=>Auth::user()->userid);
