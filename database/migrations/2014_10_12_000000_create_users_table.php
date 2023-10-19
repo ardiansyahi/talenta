@@ -16,18 +16,17 @@ class CreateUsersTable extends Migration
         Schema::create('talenta_users', function (Blueprint $table) {
             $table->id();
             $table->string('userid')->unique();
-            $table->string('name');
-            $table->string('email');
+            $table->string('name',255)->nullable();
+            $table->string('email',100)->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password',255);
             $table->integer('id_akses')->nullable;
             $table->integer('isActive')->nullable;
             $table->rememberToken();
             $table->string('created_by',200)->nullable();
             $table->timestamps();
             $table->string('modified_by',200)->nullable();
-            $table->index(['userid']);
-
+            $table->index(['userid','name','password','isActive','id_akses']);
         });
     }
 

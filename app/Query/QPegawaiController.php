@@ -69,7 +69,9 @@ class QPegawaiController
                         User::where('userid','!=','superadmin')->update([
                             'isActive'=>1,
                         ]);
+
                         for ($i = 0; $i < count($json['PegawaiKRS']); $i++) {
+                            $dt='';
                             PegawaiTalentaModel::create([
                                 'pegawaiID'=>$json['PegawaiKRS'][$i]['PEGAWAIID'],
                                 'nip'=>$json['PegawaiKRS'][$i]['NIPBARU'],
@@ -101,7 +103,23 @@ class QPegawaiController
                             //     'id_akses'=>5,
                             //     'email'=>'',
                             // );
-                            // GlobalHelper::cekUser($dt,$json['PegawaiKRS'][$i]['NIPBARU']);
+                            //GlobalHelper::cekUser($dt,$json['PegawaiKRS'][$i]['NIPBARU']);
+                            //GlobalHelper::cekUser('tes',$json['PegawaiKRS'][$i]['NIPBARU']);
+                            $kueri=User::select('userid')->whereUserid($json['PegawaiKRS'][$i]['NIPBARU'])->first();
+                            if($kueri){
+                                User::whereUserid($json['PegawaiKRS'][$i]['NIPBARU'])->update([
+                                    'isActive'=>0,
+                                ]);
+                            }else{
+                                User::create([
+                                    'userid'=>$json['PegawaiKRS'][$i]['NIPBARU'],
+                                    'name'=>$json['PegawaiKRS'][$i]['NAMA_LENGKAP'],
+                                    'password'=>bcrypt('password'),
+                                    'isActive'=>0,
+                                    'id_akses'=>5
+
+                                ]);
+                            }
 
                         }
                         $rr=array('module'=>'master pegawai','action'=>'tarik data','deskripsi'=>'Tarik Data Pegawai terbaru','res'=>'success','userid'=>Auth::user()->userid);

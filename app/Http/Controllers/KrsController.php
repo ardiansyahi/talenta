@@ -34,11 +34,25 @@ class KrsController extends Controller
 {
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
-            return view('talent-mapping.krs');
+            $tahun='';
+            $jenis='';
+            $status='';
+            return view('talent-mapping.krs',compact('tahun','jenis','status'));
         }else{
             return view('notfound');
         }
     }
+    public function cari(Request $request){
+        if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
+            $tahun=$request->tahun;
+            $jenis=$request->jenis;
+            $status=$request->status;
+            return view('talent-mapping.krs',compact('tahun','jenis','status'));
+        }else{
+            return view('notfound');
+        }
+    }
+
     public function add(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"12")){
             $dt1=KrsModel::select('id','deskripsi')
@@ -99,9 +113,17 @@ class KrsController extends Controller
 
     public function getDataKrs(Request $request){
 
-        $data=KrsModel::orderBy('tahun','desc')->get();
-        $data=KrsModel::select('id','tahun','deskripsi','jenis','batch','status')->orderBy('tahun','desc')->orderBy('id','desc')->get();
-
+        $data=KrsModel::select('id','tahun','deskripsi','jenis','batch','status');
+        if($request->status !=''){
+            $data->whereStatus($request->status);
+        }
+        if($request->jenis !=''){
+            $data->whereJenis($request->jenis);
+        }
+        if($request->tahun !=''){
+            $data->whereTahun($request->tahun);
+        }
+        $data->orderBy('tahun','desc')->orderBy('id','desc')->get();
         return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {

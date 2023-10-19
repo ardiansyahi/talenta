@@ -110,6 +110,7 @@ Route::group(['prefix'=>'master'], function(){
 
 Route::group(['prefix'=>'talent-mapping'], function(){
     Route::get('/',[KrsController::class,'index'])->name('talent-mapping')->middleware('auth');
+    Route::post('/cari',[KrsController::class,'cari'])->name('talent-mapping/cari')->middleware('auth');
     Route::get('/tambah',[KrsController::class,'add'])->name('talent-mapping/tambah')->middleware('auth');
     Route::post('/simpan',[KrsController::class,'store'])->name('talent-mapping/simpan')->middleware('auth');
     Route::get('/konfigurasi/{id}',[KrsController::class,'konfigurasi'])->name('talent-mapping/konfigurasi/')->middleware('auth');

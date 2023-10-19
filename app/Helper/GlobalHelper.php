@@ -340,15 +340,15 @@ class GlobalHelper {
     }
 
     public static function getPerilaku($nip,$tahun){
-        $total=0;
-        $kueri=View_Penilaian_Perilaku::select('nilai_akhir')
-                                ->wherePegawai_dinilai($nip)
-                                ->whereTahun($tahun)
-                                ->distinct('pegawai_dinilai')->first();
-       // $total=80;
-        if($kueri){
-            $total=$kueri->nilai_akhir;
-        }
+        $total=80;
+    //     $kueri=View_Penilaian_Perilaku::select('nilai_akhir')
+    //                             ->wherePegawai_dinilai($nip)
+    //                             ->whereTahun($tahun)
+    //                             ->distinct('pegawai_dinilai')->first();
+    //    $total=80;
+    //     if($kueri){
+    //         $total=$kueri->nilai_akhir;
+    //     }
         return $total;
     }
 
@@ -382,14 +382,19 @@ class GlobalHelper {
     }
 
     public static function cekUser($data,$nip){
-        $kueri=User::whereUserid($nip)->first();
-        if($kueri){
-            User::whereUserid($nip)->update([
-                'isActive'=>0,
-            ]);
-        }else{
-            User::create($data);
-        }
+        //$kueri=User::select('userid')->whereUserid($nip)->first();
+        // if($kueri){
+        //     User::whereUserid($nip)->update([
+        //         'isActive'=>0,
+        //     ]);
+        // }else{
+        //     User::create($data);
+        // }
+            return true;
+    }
+
+    public static function getCountKrs($jenis=null,$tahun=null,$status=null){
+        return KrsModel::where('jenis','=', $jenis)->where('tahun','=',$tahun)->where('status','=',$status)->count();
     }
 }
 
