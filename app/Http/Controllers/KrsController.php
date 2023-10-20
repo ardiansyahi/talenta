@@ -111,6 +111,13 @@ class KrsController extends Controller
         // }
     }
 
+    public function destroy($id){
+        KrsModel::find($id)->delete();
+        session()->flash('respon','success');
+        session()->flash('message','Data berhasil dihapus');
+        return redirect('/talent-mapping');
+    }
+
     public function getDataKrs(Request $request){
 
         $data=KrsModel::select('id','tahun','deskripsi','jenis','batch','status');
@@ -140,7 +147,7 @@ class KrsController extends Controller
                     if($totData > 0){
                         $action=$action. " <a href='/talent-mapping/detail/".$data->id."' class='btn btn-info btn-sm'>Detail</a>";
                     }
-                    $action=$action. " <a href='#' class='btn btn-danger btn-sm' title='Hapus'><i class='fa fa-trash'></i> Hapus </a>";
+                    $action=$action.' <a href="/talent-mapping/delete/'.$data->id.'" onclick="return confirm(`Yakin Anda Ingin Menghapus Data KRS : '.$data->deskripsi.'`)" class="btn btn-sm btn-danger">Hapus</a>';
                     return $action;
 
                 })
@@ -151,7 +158,8 @@ class KrsController extends Controller
                 ->make(true);
 
     }
-
+    
+    
     public function konfigurasi($id){
         $data=KrsModel::select("id","tahun","deskripsi","batch","jenis","fileupload","id_tikpot")
                         ->whereId($id)->first();

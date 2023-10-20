@@ -136,6 +136,7 @@ Route::group(['prefix'=>'talent-mapping'], function(){
     Route::get('/getdaftar-usulan',[KrsController::class,'getDaftarUsulan'])->name('talent-mapping/getdaftar-usulan')->middleware('auth');
     Route::get('/getdetail-daftar-usulan',[KrsController::class,'getDetailDaftarUsulan'])->name('talent-mapping/getdetail-daftar-usulan');
     Route::POST('/ajxKrs',[KrsController::class,'getKRS'])->name('ajxKrs');
+    Route::get('/delete/{id}',[KrsController::class,'destroy'])->name('talent-mapping/delete')->middleware('auth');
 
 });
 
