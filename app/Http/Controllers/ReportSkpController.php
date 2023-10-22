@@ -22,7 +22,13 @@ class ReportSkpController extends Controller
 
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"17")){
-            return view('report.skp.skp');
+            $sesakses=\Session::get('id_akses');
+            $nip='';
+            if($sesakses=='5'){
+                $nip= GlobalHelper::getNamaNipPegawai(Auth::user()->userid);
+            }
+
+            return view('report.skp.skp',compact('nip'));
         }else{
             return view('notfound');
         }

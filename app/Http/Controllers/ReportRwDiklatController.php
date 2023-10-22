@@ -32,8 +32,14 @@ class ReportRwDiklatController extends Controller
     }
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"15")){
+            $sesakses=\Session::get('id_akses');
+            $nip='';
+            if($sesakses=='5'){
+                $nip= GlobalHelper::getNamaRWByNip(Auth::user()->userid);
+            }
+
             $dt=RwDiklatKonfigModel::orderBy("id","desc")->get();
-            return view('report.diklat.rwdiklat',compact('dt'));
+            return view('report.diklat.rwdiklat',compact('dt','nip'));
         }else{
             return view('notfound');
         }

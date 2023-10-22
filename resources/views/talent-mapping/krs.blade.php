@@ -72,7 +72,8 @@
                                 <select name='status' class='form-control' id='status'>
                                     <option value=''>Pilih Status</option>
                                     <option value="publish" {{ @$status == 'publish' ? 'Selected' : '' }}>Publish</option>
-                                    <option value="non" {{ @$status == 'non' ? 'Selected' : '' }}>Non Publish</option>
+                                    <option value="non" {{ @$status == 'non_publish' ? 'Selected' : '' }}>Non Publish
+                                    </option>
                                     <option value="in_progress" {{ @$status == 'in_progress' ? 'Selected' : '' }}>In
                                         Progress</option>
                                 </select>
@@ -166,5 +167,32 @@
 
             });
         })
+
+        $(function() {
+            $('#nip').select2({
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: 'masukkan NIP / Nama',
+                ajax: {
+                    dataType: 'json',
+                    url: "{{ route('ajx-getNipPegawai') }}",
+                    delay: 800,
+                    data: function(params) {
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term
+                        }
+                    },
+                    processResults: function(data, page) {
+                        return {
+                            results: data
+                        };
+                    },
+                }
+            }).on('select2:select', function(evt) {
+                var data = $("#nip option:selected").text();
+
+            });
+        });
     </script>
 @stop

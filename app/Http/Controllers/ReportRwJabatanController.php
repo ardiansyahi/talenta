@@ -30,7 +30,13 @@ class ReportRwJabatanController extends Controller
 
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"16")){
-            return view('report.jabatan.rwjabatan');
+            $sesakses=\Session::get('id_akses');
+            $nip='';
+            if($sesakses=='5'){
+                $nip= GlobalHelper::getNamaRWJByNip(Auth::user()->userid);
+            }
+
+            return view('report.jabatan.rwjabatan',compact('nip'));
         }else{
             return view('notfound');
         }

@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\PenkomModel;
 use App\Models\RwdiklatModel;
 use App\Models\PegawaiTalentaModel;
+use App\Models\RwJabatanHitungModel;
+use App\Models\RwdiklatHitungModel;
 use App\Models\SkpModel;
 use App\Models\TikpodDetailModel;
 use App\Models\UrlKonfigModel;
@@ -282,6 +284,35 @@ class GlobalHelper {
         return $total;
     }
 
+    public static function getTotJabatan($nip){
+        $kueri=RwJabatanHitungModel::select('total')->whereNip($nip)->first();
+        $total=0;
+        if($kueri){
+            $total=$kueri->total;
+        }
+        return $total;
+    }
+
+    public static function getTotDT($nip){
+        $kueri=RwdiklatHitungModel::select('diklat_teknis')
+                                ->whereNip($nip)->first();
+        $total=0;
+        if($kueri){
+            $total=$kueri->diklat_teknis;
+        }
+        return $total;
+    }
+
+    public static function getTotDS($nip){
+        $kueri=RwdiklatHitungModel::select('diklat_struktural')
+                                ->whereNip($nip)->first();
+        $total=0;
+        if($kueri){
+            $total=$kueri->diklat_struktural;
+        }
+        return $total;
+    }
+
     public static function getSkorDT($id_krs,$kriteria){
         // $kueri=KonfigurasiModel::select('isidata')
         //                         ->whereId_krs($id_krs)
@@ -340,15 +371,14 @@ class GlobalHelper {
     }
 
     public static function getPerilaku($nip,$tahun){
-        $total=80;
-    //     $kueri=View_Penilaian_Perilaku::select('nilai_akhir')
-    //                             ->wherePegawai_dinilai($nip)
-    //                             ->whereTahun($tahun)
-    //                             ->distinct('pegawai_dinilai')->first();
-    //    $total=80;
-    //     if($kueri){
-    //         $total=$kueri->nilai_akhir;
-    //     }
+        $total=0;
+        $kueri=View_Penilaian_Perilaku::select('nilai_akhir')
+                                ->wherePegawai_dinilai($nip)
+                                ->whereTahun($tahun)
+                                ->distinct('pegawai_dinilai')->first();
+        if($kueri){
+            $total=$kueri->nilai_akhir;
+        }
         return $total;
     }
 
@@ -395,6 +425,10 @@ class GlobalHelper {
 
     public static function getCountKrs($jenis=null,$tahun=null,$status=null){
         return KrsModel::where('jenis','=', $jenis)->where('tahun','=',$tahun)->where('status','=',$status)->count();
+    }
+
+    public static function getStatusKrs($id){
+        return KrsModel::select('status')->find($id);
     }
 }
 

@@ -10,7 +10,7 @@ use App\Http\Controllers\ReportPenkomController;
 use App\Http\Controllers\ReportRwDiklatController;
 use App\Http\Controllers\ReportRwJabatanController;
 use App\Http\Controllers\ReportSkpController;
-
+use App\Http\Controllers\ReportPenilaianPerilakuController;
 use App\Http\Controllers\RwdiklatController;
 use App\Http\Controllers\RwJabatanController;
 use App\Http\Controllers\UserController;
@@ -115,6 +115,7 @@ Route::group(['prefix'=>'talent-mapping'], function(){
     Route::post('/simpan',[KrsController::class,'store'])->name('talent-mapping/simpan')->middleware('auth');
     Route::get('/konfigurasi/{id}',[KrsController::class,'konfigurasi'])->name('talent-mapping/konfigurasi/')->middleware('auth');
     Route::get('/step4/{id}',[KrsController::class,'prosesHitung'])->name('talent-mapping/step4')->middleware('auth');
+    Route::post('/step4/cari',[KrsController::class,'step4_cari'])->name('talent-mapping/step4/cari')->middleware('auth');
     Route::get('/storekonfig',[KrsController::class,'storekonfig'])->name('talent-mapping/storekonfig');
     Route::post('/simpankonfig',[KrsController::class,'simpankonfig'])->name('talent-mapping/simpankonfig')->middleware('auth');
     Route::get('/step2/{id}/{jenis}',[KrsController::class,'step2'])->name('talent-mapping/step2')->middleware('auth');
@@ -131,12 +132,15 @@ Route::group(['prefix'=>'talent-mapping'], function(){
     Route::get('/daftar-usulan/{id}',[KrsController::class,'getUsulan'])->name('talent-mapping/daftar-usulan')->middleware('auth');
     Route::post('/calculate',[KrsController::class,'calculateKRS'])->name('talent-mapping/calculate')->middleware('auth');
     Route::get('/detail/{id}',[KrsController::class,'detail'])->name('talent-mapping/detail')->middleware('auth');
+    Route::post('/detail/cari',[KrsController::class,'detail_cari'])->name('talent-mapping/detail/cari')->middleware('auth');
     Route::get('/update-status/{id}/{status}',[KrsController::class,'updateStatus'])->name('talent-mapping/update-status')->middleware('auth');
     Route::get('/getdetailkrs',[KrsController::class,'getdetailkrs'])->name('talent-mapping/getdetailkrs')->middleware('auth');
     Route::get('/getdaftar-usulan',[KrsController::class,'getDaftarUsulan'])->name('talent-mapping/getdaftar-usulan')->middleware('auth');
     Route::get('/getdetail-daftar-usulan',[KrsController::class,'getDetailDaftarUsulan'])->name('talent-mapping/getdetail-daftar-usulan');
     Route::POST('/ajxKrs',[KrsController::class,'getKRS'])->name('ajxKrs');
+    Route::POST('/ajxdetail-nilai',[KrsController::class,'getDetailNilai'])->name('ajxdetail-nilai');
     Route::get('/delete/{id}',[KrsController::class,'destroy'])->name('talent-mapping/delete')->middleware('auth');
+    Route::get('/dashboard-detail/{jenis}/{tahun}/{status}',[KrsController::class,'dashboard_detail'])->name('talent-mapping/dashboard-detail')->middleware('auth');
 
 });
 
@@ -164,6 +168,8 @@ Route::group(['prefix'=>'report'], function(){
     Route::get('/skp',[ReportSkpController::class,'index'])->name('report/skp')->middleware('auth');
     Route::post('/skp/cari',[ReportSkpController::class,'cari'])->name('report/skp/cari')->middleware('auth');
     Route::get('/skp/export/{id}/{tahun}',[ReportSkpController::class,'export'])->name('report/skp/export/')->middleware('auth');
+    Route::get('/penilaian-perilaku',[ReportPenilaianPerilakuController::class,'index'])->name('report/penilaian-perilaku')->middleware('auth');
+    Route::post('/penilaian-perilaku/cari',[ReportPenilaianPerilakuController::class,'cari'])->name('report/penilaian-perilaku/cari')->middleware('auth');
 });
 
 Route::get('/ajx-getnip',[ReportPenkomController::class,'getNIP'])->name('ajx-getnip')->middleware('auth');

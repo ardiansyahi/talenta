@@ -11,7 +11,12 @@ class ReportPenkomController extends Controller
 {
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"14")){
-            return view('report.penkom');
+            $sesakses=\Session::get('id_akses');
+            $nip='';
+            if($sesakses=='5'){
+                $nip= $nip=GlobalHelper::getNamaNipPegawai(Auth::user()->userid);
+            }
+            return view('report.penkom',compact('nip'));
         }else{
             return view('notfound');
         }
@@ -27,7 +32,7 @@ class ReportPenkomController extends Controller
     public function cari(Request $request){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"14")){
             $tahun=$request->tahun;
-            if($request->nip !=''){$nip=GlobalHelper::getNamaByNip($request->nip); }
+            if($request->nip !=''){$nip=GlobalHelper::getNamaNipPegawai($request->nip); }
             else{$nip=$request->nip;}
 
             $jenis=$request->jenis;

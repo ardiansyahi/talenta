@@ -17,7 +17,13 @@ class ReportPegawaiController extends Controller
 {
     public function index(){
         if(GlobalHelper::cekAkses(Auth::user()->userid,"13")){
-            return view('report.pegawai.index');
+            //echo \Session::get('id_akses');
+            $sesakses=\Session::get('id_akses');
+            $nip='';
+            if($sesakses=='5'){
+                $nip= GlobalHelper::getNamaNipPegawai(Auth::user()->userid);
+            }
+            return view('report.pegawai.index',compact('nip'));
         }else{
             return view('notfound');
         }
@@ -27,9 +33,9 @@ class ReportPegawaiController extends Controller
         if(GlobalHelper::cekAkses(Auth::user()->userid,"13")){
             $dataKRS=KrsModel::select("id","tahun","deskripsi","batch","jenis","status","fileupload","id_tikpot")
                 ->whereId($id_krs)->first();
-                $dataPegawai=PegawaiTalentaModel::select('nip','nama_lengkap')->whereNip($nip)->first();
-                $data=KrsFinalModel::find($id);
-                $dataHeader=KrsFinalModel::whereId_krs($id_krs)->whereJenis('header')->first();
+            $dataPegawai=PegawaiTalentaModel::select('nip','nama_lengkap')->whereNip($nip)->first();
+            $data=KrsFinalModel::find($id);
+            $dataHeader=KrsFinalModel::whereId_krs($id_krs)->whereJenis('header')->first();
             return view('report.pegawai.detail',compact('data','dataHeader','dataKRS','dataPegawai'));
         }else{
             return view('notfound');
@@ -57,17 +63,17 @@ class ReportPegawaiController extends Controller
         header("Content-type: application/json");
 
         $kueri=PegawaiTalentaModel::whereNip($request->nip)->first();
-        $pengawas=KrsFinalModel::select('krs_final.nilai','krs.tahun','krs.jenis','krs_final.id','krs_final.nip','krs_final.id_krs')
-        ->join('krs','krs.id','=','krs_final.id_krs')
-        ->where('krs_final.nip','=',$request->nip)
-        ->where('krs.jenis','=','pengawas')
+        $pengawas=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
+        ->join('talenta_krs','talenta_krs.id','=','talenta_krs_final.id_krs')
+        ->where('talenta_krs_final.nip','=',$request->nip)
+        ->where('talenta_krs.jenis','=','pengawas')
         ->get();
 
-        $administrator=KrsFinalModel::select('krs_final.nilai','krs.tahun','krs.jenis','krs_final.id','krs_final.nip','krs_final.id_krs')
-                    ->join('krs','krs.id','=','krs_final.id_krs')
-                    ->where('krs_final.nip','=',$request->nip)
-                    ->where('krs.jenis','=','administrator')
-                    ->where('krs_final.status','=','publish')
+        $administrator=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
+                    ->join('talenta_krs','talenta_krs.id','=','talenta_krs_final.id_krs')
+                    ->where('talenta_krs_final.nip','=',$request->nip)
+                    ->where('talenta_krs.jenis','=','administrator')
+                    ->where('talenta_krs_final.status','=','publish')
                     ->get();
         $posts=array('pegawai'=>$kueri,'pengawas'=>$pengawas,'administrator'=>$administrator);
 

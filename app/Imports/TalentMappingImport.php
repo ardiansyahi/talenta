@@ -35,7 +35,7 @@ class TalentMappingImport implements ToModel,WithStartRow
         //echo '<br><br>';
         $kotak=0;
         $data=KrsHeaderModel::whereId_krs($this->id)->first();
-        $dataKRS=KrsModel::find($this->id)->first();
+        $dataKRS=KrsModel::find($this->id);
         $dtBobot=KrsBobot::whereId_krs($this->id)->whereJenis('isi')->first();
         $pegawai=$potensial=$kinerja=$nilai=array();
         $jsonPegawai=json_decode($data->pegawai);
@@ -72,7 +72,6 @@ class TalentMappingImport implements ToModel,WithStartRow
             //echo $row[$tp[0]].'-'.$hitung.'<br>';
 
         }
-
         $kotak=GlobalHelper::getKotak(round($totalPotensial),round($totalKinerja),$dataKRS->id_tikpot);
         $nilai=array($totalPotensial,$totalKinerja,$kotak);
 

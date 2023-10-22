@@ -31,22 +31,31 @@
                     <div class="col-xxl-4">
                         <div class="p-20 border-lg-right border-bottom border-xxl-bottom-0">
                             <div class="d-flex m-b-10">
+
                                 <p class="mb-0 font-regular text-muted font-weight-bold">
                                 <h4>Total KRS Pengawas
                                     {{ date('Y') }}</h4>
                                 </p>
-                                <a class="mb-0 ml-auto font-weight-bold" href="#"><i class="ti ti-more-alt"></i> </a>
+                                <a class="mb-0 ml-auto font-weight-bold" href="#"><i class="ti ti-more-alt"></i>
+                                </a>
+
                             </div>
                             <div class="d-block d-sm-flex h-100 align-items-center">
                                 <div class="apexchart-wrapper">
                                     <div id="analytics7"></div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i> {{ $tkrs_fp }}</h3>
+                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
+                                        <a href="talent-mapping/dashboard-detail/pengawas/{{ date('Y') }}/publish">
+                                            {{ $tkrs_fp }}
+                                        </a>
+                                    </h3>
+
                                     <p>KRS</p>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="col-xxl-4">
                         <div class="p-20 border-xxl-right border-bottom border-xxl-bottom-0">
@@ -62,7 +71,10 @@
                                     <div id="analytics8"></div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i> {{ $tkrs_fa }}</h3>
+                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
+                                        <a
+                                            href="talent-mapping/dashboard-detail/administrator/{{ date('Y') }}/publish">{{ $tkrs_fa }}</a>
+                                    </h3>
                                     <p>KRS</p>
                                 </div>
                             </div>
@@ -81,7 +93,10 @@
                                     <div id="analytics9"></div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>{{ $tkrs_fk }}</h3>
+                                    <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
+                                        <a
+                                            href="talent-mapping/dashboard-detail/jpt/{{ date('Y') }}/publish">{{ $tkrs_fk }}</a>
+                                    </h3>
                                     <p>KRS</p>
                                 </div>
                             </div>
@@ -113,7 +128,11 @@
                                     </div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0">{{ $tkrs_ip }}</h3>
+                                    <h3 class="mb-0">
+                                        <a href="talent-mapping/dashboard-detail/pengawas/{{ date('Y') }}/in_progress">
+                                            {{ $tkrs_ip }}
+                                        </a>
+                                    </h3>
                                     <p>KRS</p>
                                 </div>
                             </div>
@@ -135,7 +154,12 @@
                                     </div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0"> {{ $tkrs_ia }}</h3>
+                                    <h3 class="mb-0">
+                                        <a
+                                            href="talent-mapping/dashboard-detail/administrator/{{ date('Y') }}/in_progress">
+                                            {{ $tkrs_ia }}
+                                        </a>
+                                    </h3>
                                     <p>KRS</p>
                                 </div>
                             </div>
@@ -156,7 +180,11 @@
                                     </div>
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                    <h3 class="mb-0">{{ $tkrs_ik }}</h3>
+                                    <h3 class="mb-0">
+                                        <a href="talent-mapping/dashboard-detail/jpt/{{ date('Y') }}/in_progress">
+                                            {{ $tkrs_ik }}
+                                        </a>
+                                    </h3>
                                     <p>KRS</p>
                                 </div>
                             </div>
