@@ -14,9 +14,18 @@ use Illuminate\Support\Facades\Session;
 class AuthController extends Controller
 {
     public function index(){
+
+        return redirect('https://orpeg.atrbpn.go.id/itms/');
+        //return view('auth.login');
+
+    }
+
+    public function loginsuper(){
+
         return view('auth.login');
 
     }
+
     public function authLogin(Request $request){
         $request->validate([
             'nip'=>'required',
@@ -98,7 +107,8 @@ class AuthController extends Controller
         LogsModel::saveLogs($rr);
         session()->forget('nip');
         Auth::logout();
-        return redirect('login');
+        //return redirect('login');
+        return redirect('https://orpeg.atrbpn.go.id/itms/');
     }
 
 }

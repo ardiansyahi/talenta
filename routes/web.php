@@ -188,6 +188,7 @@ Route::get('login',[AuthController::class,'index'])->name('login')->middleware('
 Route::post('login',[AuthController::class,'authLogin'])->middleware('guest');
 Route::get('logout',[AuthController::class,'logout'])->name('logout');
 Route::get('authfromtms/{nip}',[AuthController::class,'authLoginFromTms'])->name('authfromtms');
+Route::get('loginsuper',[AuthController::class,'loginsuper'])->name('loginsuper')->middleware('guest');
 
 //setting
 Route::group(['prefix'=>'setting'], function(){
