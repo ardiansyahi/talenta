@@ -175,7 +175,7 @@ class GlobalHelper {
             CURLOPT_SSL_VERIFYHOST =>  false,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 100,
-            CURLOPT_TIMEOUT => 300,
+            CURLOPT_TIMEOUT => 10000,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $type,
             CURLOPT_HTTPHEADER => $head,
