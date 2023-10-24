@@ -14,3 +14,9 @@ yarn-error.log
 /.idea
 /.vscode
 public/.htaccess
+.htaccess
+index.php
+config/app.php
+
+app/Providers/AppServiceProvider.php
+app/Providers/RouteServiceProvider.php

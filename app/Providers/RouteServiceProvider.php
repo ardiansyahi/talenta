@@ -48,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
 		
-		\URL::forceRootUrl(\Config::get('app.url'));
+		//\URL::forceRootUrl(\Config::get('app.url'));
 
     }
 
