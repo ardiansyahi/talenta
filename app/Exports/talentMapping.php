@@ -37,7 +37,7 @@ class talentMapping  extends DefaultValueBinder implements FromCollection, WithC
             case "pelaksana":
                 return ["NIP", "Nama", "Tgl Lahir", "Pendidikan", "Eselon", "Level Jabatan",
                 "Provinsi","Satker","Nama Jabatan", "TMT Jabatan","Pangkat", "Golongan",
-                "Cek Penkom","Skoring Mansoskul","Skoring Generik","Skoring Spresifik",
+                "Cek Penkom","Skoring Mansoskul","Skoring Generik","Skoring Spesifik",
                 "Skoring Pendidikan","Total Riwayat Jabatan", "Bobot Riwayat Jabatan","Total Bobot Riwayat Jabatan",
                 "Diklat Struktural","Bobot Diklat Struktural", "Diklat Teknis",
                 "Bobot Diklat Teknis","Total Bobot", "Bobot Diklat", "Skoring Pangkat", "Year -2", "Year -1", "Penilaian Perilaku"
