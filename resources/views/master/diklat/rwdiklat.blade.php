@@ -259,7 +259,8 @@
             serverSide: true,
                     ajax: {
                        url:'{{ route('ajx-getRWjson') }}',
-                        data:{nip:$("#nip").val(),tahun:$("#tahun").val(),jenis:$("#jenis").val()}
+                       type:'post',
+                        data:{nip:$("#nip").val(),tahun:$("#tahun").val(),jenis:$("#jenis").val(), _token: "{{ csrf_token() }}"}
                     },
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
@@ -285,6 +286,7 @@
            ajax: {
               dataType: 'json',
               url: "{{route('ajx-getNIPRW')}}",
+              type:'POST',
               delay: 800,
               data: function(params) {
                 return {

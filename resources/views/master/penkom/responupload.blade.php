@@ -59,7 +59,7 @@
                                     @elseif ($jenis=="pengawas")
                                         <th>Skoring Mansoskul</th>
                                         <th>Skoring Teknis</th>
-                                    @elseif ($jenis=="administrator"||$jenis=="jpt")
+                                    @elseif ($jenis=="administrator"||$jenis=="jpt_pratama"||$jenis=="jpt_madya")
                                         <th>Skoring Mansoskul</th>
                                     @endif
 
@@ -83,7 +83,7 @@
                                             @elseif ($jenis=="pengawas")
                                                 <td>{{$item->mansoskul}}</td>
                                                 <td>{{$item->teknis_generik}}</td>
-                                            @elseif ($jenis=="administrator"||$jenis=="jpt")
+                                            @elseif ($jenis=="administrator"||$jenis=="jpt_pratama"||$jenis=="jpt_madya")
                                                 <td>{{$item->mansoskul}}</td>
                                             @endif
 

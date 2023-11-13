@@ -54,6 +54,8 @@ class talentMapping  extends DefaultValueBinder implements FromCollection, WithC
                 break;
             case "administrator":
             case "jpt":
+            case "jpt_pratama":
+            case "jpt_madya":
                 return ["NIP", "Nama", "Tgl Lahir", "Pendidikan", "Eselon", "Level Jabatan",
                 "Provinsi","Satker","Nama Jabatan", "TMT Jabatan","Pangkat", "Golongan",
                 "Cek Penkom","Skoring Mansoskul",
@@ -150,6 +152,8 @@ class talentMapping  extends DefaultValueBinder implements FromCollection, WithC
                 break;
             case "administrator":
             case "jpt":
+            case "jpt_pratama":
+            case "jpt_madya":
                 return [
                     $Krs_temp_model->nip,
                     $Krs_temp_model->nama,

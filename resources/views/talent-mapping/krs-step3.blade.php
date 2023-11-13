@@ -48,20 +48,20 @@
                 <div class="card-body">
                     @foreach($data as $key => $value)
                         <div class='row mb-3 mt-3'>
-                            <div class='col-lg-1'>KRS Tahun</div>
-                            <div class='col-lg-11'>{{$value->tahun}}</div>
+                            <div class='col-lg-2'>Talent Mapping Tahun</div>
+                            <div class='col-lg-10'>{{$value->tahun}}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Jenis KRS</div>
-                            <div class='col-lg-11'>{{$value->jenis}}</div>
+                            <div class='col-lg-2'>Jenis Talent Mapping</div>
+                            <div class='col-lg-10'>{{str_ireplace("_"," ",$value->jenis)}}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Batch</div>
-                            <div class='col-lg-11'>{{$value->batch}}</div>
+                            <div class='col-lg-2'>Batch</div>
+                            <div class='col-lg-10'>{{$value->batch}}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Deskripsi</div>
-                            <div class='col-lg-11'>{{$value->deskripsi}}</div>
+                            <div class='col-lg-2'>Deskripsi</div>
+                            <div class='col-lg-10'>{{$value->deskripsi}}</div>
                         </div>
                     @endforeach
                 </div>
@@ -82,6 +82,8 @@
                                 <option value='pelaksana' {{(@$datapenkom->kriteria =='pelaksana') ? 'selected':'';}}>Pelaksana</option>
                                 <option value='pengawas' {{(@$datapenkom->kriteria =='pengawas') ? 'selected':'';}}>Pengawas</option>
                                 <option value='administrator' {{(@$datapenkom->kriteria =='administrator') ? 'selected':'';}}>Administrator</option>
+                                <option value='jpt_pratama' {{(@$datapenkom->kriteria =='jpt_pratama') ? 'selected':'';}}>JPT Pratama</option>
+                                <option value='jpt_madya' {{(@$datapenkom->kriteria =='jpt_madya') ? 'selected':'';}}>JPT Madya</option>
                             </select>
                         </div>
                     </div>   
@@ -351,7 +353,7 @@
         <div class="col-lg-12">
             <div class="card card-statistics">
                 <div class="card-body">
-                     <a href="/talent-mapping/step4/{{$id}}" class='btn btn-primary btn-lg float-right '>Lanjut ke Step 4</a>
+                     <a href="{{url('/talent-mapping/step4/'.$id.'')}}" class='btn btn-primary btn-lg float-right '>Lanjut ke Step 4</a>
                 </div>
             </div>
         </div>
@@ -413,6 +415,7 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: $("#setting_sp_kriteria").val(),
                     isidata: $("#setting_sp_value").val(),
@@ -420,10 +423,10 @@
                     id_krs:'{{$id}}',
                     id:id,
                     type:type,
-                    created_by:'{{Auth::user()->userid}}'
+                    created_by:'{{Auth::user()->userid}}',
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
                 success:function(result){
                     if(result.respon=='success'){
                         $("#isi_skp").empty();
@@ -498,6 +501,7 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: $("#setting_rwj_kriteria").val(),
                     isidata: $("#setting_rwj_value").val(),
@@ -505,10 +509,10 @@
                     id_krs:'{{$id}}',
                     id:id,
                     type:type,
-                    created_by:'{{Auth::user()->userid}}'
+                    created_by:'{{Auth::user()->userid}}',
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
                 success:function(result){
                     
                     if(result.respon=='success'){
@@ -578,6 +582,7 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: "Sesuai",
                     isidata: $("#setting_ds_sesuai").val(),
@@ -586,10 +591,10 @@
                     jenis : 'diklat_struktural',
                     id_krs:'{{$id}}',
                     type:'add',
-                    created_by:'{{Auth::user()->userid}}'
+                    created_by:'{{Auth::user()->userid}}',
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
                 success:function(result){
                     if(result.respon=='success'){
                         setTimeout(function(){
@@ -625,16 +630,18 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: $("#jenis_penkom").val(),
                     isidata: $("#tahun_penkom").val(),
                     jenis : 'penkom',
                     type:type,
                     id_krs:'{{$id}}',
-                    created_by:"{{Auth::user()->userid}}"
+                    created_by:"{{Auth::user()->userid}}",
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
+                
                 success:function(result){
                     if(result.respon=='success'){
                         setTimeout(function(){
@@ -676,6 +683,7 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: $("#setting_dt_kriteria").val(),
                     isidata: $("#setting_dt_value").val(),
@@ -683,10 +691,10 @@
                     id_krs:'{{$id}}',
                     id:id,
                     type:type,
-                    created_by:"{{Auth::user()->userid}}"
+                    created_by:"{{Auth::user()->userid}}",
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
                 success:function(result){
                     if(result.respon=='success'){
                         $("#isi_dt").empty();
@@ -761,6 +769,7 @@
             $("#btn-close").hide();
             $.ajax({
                 url:"{{route('talent-mapping/storekonfig')}}",
+                type:'post',
                 data:{
                     kriteria: $("#setting_pangkat_kriteria").val(),
                     isidata: $("#setting_pangkat_value").val(),
@@ -768,10 +777,10 @@
                     id_krs:'{{$id}}',
                     id:id,
                     type:type,
-                    created_by:'{{Auth::user()->userid}}'
+                    created_by:'{{Auth::user()->userid}}',
+                    _token: "{{ csrf_token() }}"
                 },
                 dataType:'JSON',
-                type:'GET',
                 success:function(result){
                     if(result.respon=='success'){
                         $("#isi_sp").empty();

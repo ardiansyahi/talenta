@@ -11,7 +11,7 @@
                     <nav>
                         <ol class="breadcrumb p-0 m-b-0">
                             <li class="breadcrumb-item">
-                                <a href="index.html"><i class="ti ti-home"></i></a>
+                                <a href="{{route('home')}}"><i class="ti ti-home"></i></a>
                             </li>
                             <li class="breadcrumb-item">
                                 Home
@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
-                                        <a href="talent-mapping/dashboard-detail/pengawas/{{ date('Y') }}/publish">
+                                        <a href="{{url('/talent-mapping/dashboard-detail/pengawas/'.date('Y') .'/publish')}}">
                                             {{ $tkrs_fp }}
                                         </a>
                                     </h3>
@@ -73,7 +73,7 @@
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
                                         <a
-                                            href="talent-mapping/dashboard-detail/administrator/{{ date('Y') }}/publish">{{ $tkrs_fa }}</a>
+                                            href="{{url('talent-mapping/dashboard-detail/administrator/'. date('Y') .'/publish')}}">{{ $tkrs_fa }}</a>
                                     </h3>
                                     <p>KRS</p>
                                 </div>
@@ -95,7 +95,7 @@
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0"><i class="icon-arrow-up-circle"></i>
                                         <a
-                                            href="talent-mapping/dashboard-detail/jpt/{{ date('Y') }}/publish">{{ $tkrs_fk }}</a>
+                                            href="{{url('talent-mapping/dashboard-detail/jpt/'.date('Y').'/publish')}}">{{ $tkrs_fk }}</a>
                                     </h3>
                                     <p>KRS</p>
                                 </div>
@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0">
-                                        <a href="talent-mapping/dashboard-detail/pengawas/{{ date('Y') }}/in_progress">
+                                        <a href="{{url('talent-mapping/dashboard-detail/pengawas/'.date('Y').'/in_progress')}}">
                                             {{ $tkrs_ip }}
                                         </a>
                                     </h3>
@@ -156,7 +156,7 @@
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0">
                                         <a
-                                            href="talent-mapping/dashboard-detail/administrator/{{ date('Y') }}/in_progress">
+                                            href="{{url('talent-mapping/dashboard-detail/administrator/'.date('Y').'/in_progress')}}">
                                             {{ $tkrs_ia }}
                                         </a>
                                     </h3>
@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
                                     <h3 class="mb-0">
-                                        <a href="talent-mapping/dashboard-detail/jpt/{{ date('Y') }}/in_progress">
+                                        <a href="{{url('talent-mapping/dashboard-detail/jpt/'.date('Y').'/in_progress')}}">
                                             {{ $tkrs_ik }}
                                         </a>
                                     </h3>

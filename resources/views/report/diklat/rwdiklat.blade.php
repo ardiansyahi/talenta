@@ -90,7 +90,7 @@
                                         }
 
                                     @endphp
-                                    <a href="/report/rw-diklat/export/{{ $np }}/{{ $jn }}"
+                                    <a href="{{url('/report/rw-diklat/export/'.$np.'/'. $jn.'')}}"
                                         class="btn btn-success float-right">Export Data</a>
                                 </div>
                             </div>
@@ -216,10 +216,12 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('ajx-getRWjson') }}',
+                    type:'POST',
                     data: {
                         nip: $("#nip").val(),
                         tahun: $("#tahun").val(),
-                        jenis: $("#jenis").val()
+                        jenis: $("#jenis").val(),
+                        _token: "{{ csrf_token() }}",
                     }
                 },
                 columns: [{
@@ -261,6 +263,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNIPRW') }}",
+                    type:'POST',
                     delay: 800,
                     data: function(params) {
                         return {

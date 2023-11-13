@@ -53,12 +53,12 @@
                         @csrf
                         <input type='hidden' name='id' value='{{$id}}'>
                         <div class='row mb-3 mt-3'>
-                            <div class='col-lg-2'>KRS Tahun</div>
+                            <div class='col-lg-2'>Talent Mapping Tahun</div>
                             <div class='col-lg-10'>{{$data->tahun}}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-2'>Jenis KRS</div>
-                            <div class='col-lg-10'>{{$data->jenis}}</div>
+                            <div class='col-lg-2'>Jenis Talent Mapping</div>
+                            <div class='col-lg-10'>{{str_ireplace("_"," ",$data->jenis)}}</div>
                         </div>
                         <div class='row mb-3'>
                             <div class='col-lg-2'>Batch</div>

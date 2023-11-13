@@ -7,7 +7,8 @@
     <!-- begin sidebar-nav -->
     <div class="sidebar-nav scrollbar scroll_light">
         <ul class="metismenu " id="sidebarNav">
-            <li><a href="/" aria-expanded="false"><i class="nav-icon fa fa-home"></i><span
+            
+            <li><a href="{{route('home')}}" aria-expanded="false"><i class="nav-icon fa fa-home"></i><span
                         class="nav-title">Home</span></a>
             </li>
             @if (array_search('1', json_decode($akses->id_form)))

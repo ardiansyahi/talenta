@@ -54,9 +54,9 @@ Route::group(['prefix'=>'master'], function(){
         Route::get('/',[PegawaiController::class,'index'])->name('master/pegawai')->middleware('auth');
         Route::post('/cari',[PegawaiController::class,'cari'])->name('master/pegawai/cari')->middleware('auth');
         Route::get('/ajx-getPegawai',[PegawaiController::class,'getPegawai'])->name('ajx-getPegawai')->middleware('auth');
-        Route::get('/ajx-getNipPegawai',[PegawaiController::class,'getNipPegawai'])->name('ajx-getNipPegawai')->middleware('auth');
-        Route::get('/ajx-getPegawaiDetail',[PegawaiController::class,'getPegawaiDetail'])->name('ajx-getPegawaiDetail');
-        Route::get('/ajx-getPegawaiHistory',[ReportPegawaiController::class,'getPegawaiHistory'])->name('ajx-getPegawaiHistory');
+        Route::post('/ajx-getNipPegawai',[PegawaiController::class,'getNipPegawai'])->name('ajx-getNipPegawai')->middleware('auth');
+        Route::post('/ajx-getPegawaiDetail',[PegawaiController::class,'getPegawaiDetail'])->name('ajx-getPegawaiDetail');
+        Route::post('/ajx-getPegawaiHistory',[ReportPegawaiController::class,'getPegawaiHistory'])->name('ajx-getPegawaiHistory');
     });
 
      //penkom
@@ -73,7 +73,7 @@ Route::group(['prefix'=>'master'], function(){
         Route::get('/ajx-getRW',[RwdiklatController::class,'getRW'])->name('ajx-getRW')->middleware('auth');
         Route::get('/',[RwdiklatController::class,'index'])->name('master/rw-diklat')->middleware('auth');
         Route::post('/cari',[RwdiklatController::class,'cari'])->name('master/rw-diklat/cari')->middleware('auth');
-        Route::get('/ajx-getNIPRW',[RwdiklatController::class,'getNIPRW'])->name('ajx-getNIPRW')->middleware('auth');
+        Route::POST('/ajx-getNIPRW',[RwdiklatController::class,'getNIPRW'])->name('ajx-getNIPRW')->middleware('auth');
         Route::get('/ajx-getRwDetail',[RwdiklatController::class,'getRwDetail'])->name('ajx-getRwDetail');
         Route::post('/ajx-postRwKonfig',[RwdiklatController::class,'postRwKonfig'])->name('ajx-postRwKonfig');
     });
@@ -81,7 +81,7 @@ Route::group(['prefix'=>'master'], function(){
     //RW jabatan
     Route::group(['prefix'=>'rw-jabatan'], function(){
         Route::get('/',[RwJabatanController::class,'index'])->name('master/rw-jabatan')->middleware('auth');
-        Route::get('/ajx-getNIPRWJ',[RwJabatanController::class,'getNIPRWJ'])->name('ajx-getNIPRWJ')->middleware('auth');
+        Route::post('/ajx-getNIPRWJ',[RwJabatanController::class,'getNIPRWJ'])->name('ajx-getNIPRWJ')->middleware('auth');
         Route::get('/ajx-getRwJabatan',[RwJabatanController::class,'getRwJabatan'])->name('ajx-getRwJabatan')->middleware('auth');
         Route::get('/ajx-getRwJabatanDetail',[RwJabatanController::class,'getRwJabatanDetail'])->name('ajx-getRwJabatanDetail');
         Route::post('/cari',[RwJabatanController::class,'cari'])->name('master/rw-jabatan/cari')->middleware('auth');
@@ -98,7 +98,7 @@ Route::group(['prefix'=>'master'], function(){
     Route::group(['prefix'=>'penilaian-perilaku'], function(){
         Route::get('/',[PenilaianPerilakuController::class,'index'])->name('master/penilaian-perilaku')->middleware('auth');
         Route::post('/cari',[PenilaianPerilakuController::class,'cari'])->name('master/penilaian-perilaku/cari')->middleware('auth');
-        Route::get('/ajx-getPenilaianPerilaku',[PenilaianPerilakuController::class,'getPenilaianPerilaku'])->name('ajx-getPenilaianPerilaku')->middleware('auth');
+        Route::post('/ajx-getPenilaianPerilaku',[PenilaianPerilakuController::class,'getPenilaianPerilaku'])->name('ajx-getPenilaianPerilaku')->middleware('auth');
 
     });
 
@@ -116,10 +116,10 @@ Route::group(['prefix'=>'talent-mapping'], function(){
     Route::get('/konfigurasi/{id}',[KrsController::class,'konfigurasi'])->name('talent-mapping/konfigurasi/')->middleware('auth');
     Route::get('/step4/{id}',[KrsController::class,'prosesHitung'])->name('talent-mapping/step4')->middleware('auth');
     Route::post('/step4/cari',[KrsController::class,'step4_cari'])->name('talent-mapping/step4/cari')->middleware('auth');
-    Route::get('/storekonfig',[KrsController::class,'storekonfig'])->name('talent-mapping/storekonfig');
+    Route::post('/storekonfig',[KrsController::class,'storekonfig'])->name('talent-mapping/storekonfig');
     Route::post('/simpankonfig',[KrsController::class,'simpankonfig'])->name('talent-mapping/simpankonfig')->middleware('auth');
     Route::get('/step2/{id}/{jenis}',[KrsController::class,'step2'])->name('talent-mapping/step2')->middleware('auth');
-    Route::get('/getdatastep2',[KrsController::class,'getDataStep2'])->name('talent-mapping/getdatastep2')->middleware('auth');
+    Route::post('/getdatastep2',[KrsController::class,'getDataStep2'])->name('talent-mapping/getdatastep2');
     Route::get('/step3/{id}',[KrsController::class,'konfigurasiStep3'])->name('talent-mapping/step3/')->middleware('auth');
     Route::get('/export-krs/{id}',[KrsController::class,'export_krs'])->name('talent-mapping/export-krs/')->middleware('auth');
     Route::get('/export-krs-v2/{id}',[KrsController::class,'export_krs_batch2'])->name('talent-mapping/export-krs-v2/')->middleware('auth');
@@ -134,10 +134,11 @@ Route::group(['prefix'=>'talent-mapping'], function(){
     Route::get('/detail/{id}',[KrsController::class,'detail'])->name('talent-mapping/detail')->middleware('auth');
     Route::post('/detail/cari',[KrsController::class,'detail_cari'])->name('talent-mapping/detail/cari')->middleware('auth');
     Route::get('/update-status/{id}/{status}',[KrsController::class,'updateStatus'])->name('talent-mapping/update-status')->middleware('auth');
-    Route::get('/getdetailkrs',[KrsController::class,'getdetailkrs'])->name('talent-mapping/getdetailkrs')->middleware('auth');
+    Route::post('/getdetailkrs',[KrsController::class,'getdetailkrs'])->name('talent-mapping/getdetailkrs')->middleware('auth');
     Route::get('/getdaftar-usulan',[KrsController::class,'getDaftarUsulan'])->name('talent-mapping/getdaftar-usulan')->middleware('auth');
     Route::get('/getdetail-daftar-usulan',[KrsController::class,'getDetailDaftarUsulan'])->name('talent-mapping/getdetail-daftar-usulan');
     Route::POST('/ajxKrs',[KrsController::class,'getKRS'])->name('ajxKrs');
+    Route::POST('/ajx-cekkrs',[KrsController::class,'getcekkrs'])->name('ajx-cekkrs');
     Route::POST('/ajxdetail-nilai',[KrsController::class,'getDetailNilai'])->name('ajxdetail-nilai');
     Route::get('/delete/{id}',[KrsController::class,'destroy'])->name('talent-mapping/delete')->middleware('auth');
     Route::get('/dashboard-detail/{jenis}/{tahun}/{status}',[KrsController::class,'dashboard_detail'])->name('talent-mapping/dashboard-detail')->middleware('auth');
@@ -173,16 +174,16 @@ Route::group(['prefix'=>'report'], function(){
 });
 
 Route::get('/ajx-getnip',[ReportPenkomController::class,'getNIP'])->name('ajx-getnip')->middleware('auth');
-Route::get('/ajx-getPenkom',[PenkomController::class,'getPenkom'])->name('ajx-getPenkom');
-Route::get('/ajx-getPenkomDetail',[PenkomController::class,'getPenkomDetail'])->name('ajx-getPenkomDetail');
+Route::post('/ajx-getPenkom',[PenkomController::class,'getPenkom'])->name('ajx-getPenkom');
+Route::post('/ajx-getPenkomDetail',[PenkomController::class,'getPenkomDetail'])->name('ajx-getPenkomDetail');
 
-Route::get('/ajx-getRWjson',[RwdiklatController::class,'getRWjson'])->name('ajx-getRWjson');
-Route::get('/ajx-getRwJabatanJson',[RwJabatanController::class,'getRwJabatanJson'])->name('ajx-getRwJabatanJson');
-Route::get('/ajx-getPegawaiJson',[PegawaiController::class,'getPegawaiJson'])->name('ajx-getPegawaiJson');
-Route::get('/ajx-getDataKrs',[KrsController::class,'getDataKrs'])->name('ajx-getDataKrs');
-Route::get('/ajx-getKrsTemp',[KrsController::class,'getListTemp'])->name('ajx-getKrsTemp');
-Route::get('/ajx-getSkpJson',[SkpController::class,'getSkpJson'])->name('ajx-getSkpJson');
-Route::get('/ajx-getTikpot',[TikPotController::class,'getTikpot'])->name('ajx-getTikpot');
+Route::post('/ajx-getRWjson',[RwdiklatController::class,'getRWjson'])->name('ajx-getRWjson');
+Route::POST('/ajx-getRwJabatanJson',[RwJabatanController::class,'getRwJabatanJson'])->name('ajx-getRwJabatanJson');
+Route::POST('/ajx-getPegawaiJson',[PegawaiController::class,'getPegawaiJson'])->name('ajx-getPegawaiJson');
+Route::post('/ajx-getDataKrs',[KrsController::class,'getDataKrs'])->name('ajx-getDataKrs');
+Route::post('/ajx-getKrsTemp',[KrsController::class,'getListTemp'])->name('ajx-getKrsTemp');
+Route::post('/ajx-getSkpJson',[SkpController::class,'getSkpJson'])->name('ajx-getSkpJson');
+Route::post('/ajx-getTikpot',[TikPotController::class,'getTikpot'])->name('ajx-getTikpot');
 //login
 Route::get('login',[AuthController::class,'index'])->name('login')->middleware('guest');
 Route::post('login',[AuthController::class,'authLogin'])->middleware('guest');

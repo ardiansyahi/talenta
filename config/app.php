@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/talenta/public'),
+    'url' => env('APP_URL', 'http://talenta.test'),
 
-    'asset_url' => env('ASSET_URL', 'http://localhost/talenta/public'),
+    'asset_url' => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Providers\GlobalProvider::class,
+        
 
 
 
@@ -179,7 +180,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-
+       // DataJoe\Extensions\Illuminate\Database\DatabaseServiceProvider::class,
     ],
 
     /*

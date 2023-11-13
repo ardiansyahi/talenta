@@ -34,7 +34,7 @@
                     <nav>
                         <ol class="breadcrumb p-0 m-b-0">
                             <li class="breadcrumb-item">
-                                <a href="index.html"><i class="ti ti-home"></i></a>
+                                <a href="{{route('home')}}"><i class="ti ti-home"></i></a>
                             </li>
                             <li class="breadcrumb-item">
                                 Home
@@ -165,9 +165,9 @@
                             <td class="bgbold">` + myArr[0] + `</td>
                             <td class="bgbold">` + myArr[1] + `</td>
                             <td class="bgbold">` + myArr[2] + `</td>
-                            <td class="bgbold"  align="center"><a href="/report/pegawai/detail-talent/pengawas/` + item
+                            <td class="bgbold"  align="center"><a href="{{url('/report/pegawai/detail-talent/pengawas/` + item
                             .id + `/` + item
-                            .id_krs + `/` + item.nip + `" target="_BLANK" class="btn btn-primary">View Detail</a></td>
+                            .id_krs + `/` + item.nip + `')}}" target="_BLANK" class="btn btn-primary">View Detail</a></td>
                         </tr>`);
                     })
 
@@ -179,9 +179,9 @@
                             <td class="bgbold">` + myArr[0] + `</td>
                             <td class="bgbold">` + myArr[1] + `</td>
                             <td class="bgbold">` + myArr[2] + `</td>
-                            <td class="bgbold" align="center"><a href="/report/pegawai/detail-talent/administrator/` +
+                            <td class="bgbold" align="center"><a href="{{url('/report/pegawai/detail-talent/administrator/` +
                             item.id + `/` +
-                            item.id_krs + `/` + item.nip + `" target="_BLANK" class="btn btn-primary">View Detail</a></td>
+                            item.id_krs + `/` + item.nip + `')}}" target="_BLANK" class="btn btn-primary">View Detail</a></td>
                         </tr>`);
                     })
                 });

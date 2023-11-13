@@ -63,19 +63,13 @@ class ReportPegawaiController extends Controller
         header("Content-type: application/json");
 
         $kueri=PegawaiTalentaModel::whereNip($request->nip)->first();
-        $pengawas=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
-        ->join('talenta_krs','talenta_krs.id','=','talenta_krs_final.id_krs')
-        ->where('talenta_krs_final.nip','=',$request->nip)
-        ->where('talenta_krs.jenis','=','pengawas')
-        ->get();
-
-        $administrator=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
+        $talentmapping=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
                     ->join('talenta_krs','talenta_krs.id','=','talenta_krs_final.id_krs')
                     ->where('talenta_krs_final.nip','=',$request->nip)
-                    ->where('talenta_krs.jenis','=','administrator')
                     ->where('talenta_krs_final.status','=','publish')
+                    ->orderBy('talenta_krs.tahun','desc')
                     ->get();
-        $posts=array('pegawai'=>$kueri,'pengawas'=>$pengawas,'administrator'=>$administrator);
+        $posts=array('pegawai'=>$kueri,'talentmapping'=>$talentmapping);
 
         return json_encode($posts);
     }

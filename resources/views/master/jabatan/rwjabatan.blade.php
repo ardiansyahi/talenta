@@ -120,7 +120,8 @@
             serverSide: true,
                     ajax: {
                        url:'{{ route('ajx-getRwJabatanJson') }}',
-                        data:{nip:$("#nip").val()}
+                       type:'post',
+                        data:{nip:$("#nip").val(), _token: "{{ csrf_token() }}"}
                     },
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
@@ -144,6 +145,7 @@
            placeholder: 'masukkan NIP / Nama',
            ajax: {
               dataType: 'json',
+              type:'post',
               url: "{{route('ajx-getNIPRWJ')}}",
               delay: 800,
               data: function(params) {

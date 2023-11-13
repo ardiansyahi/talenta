@@ -56,7 +56,7 @@
                                         @php
 
                                             if (!empty($nip)) {
-                                                echo "<option value='" . $nip->nip . "'>" . $nip->nip . '-' . $nip->nama_lengkap . '</option>';
+                                                echo "<option value='" . $nip->nip . "'>" . $nip->nip . '-' . $nip->nama . '</option>';
                                             } else {
                                                 echo "<option value=''>Pilih NIP</option>";
                                             }
@@ -84,7 +84,7 @@
                                         }
 
                                     @endphp
-                                    <a href="/report/skp/export/{{ $np }}/{{ $th }}"
+                                    <a href="{{url('/report/skp/export/'.$np.'/'.$th.'')}}"
                                         class="btn btn-success float-right">Export Data</a>
 
                                 </div>
@@ -147,9 +147,11 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('ajx-getSkpJson') }}',
+                    type:'post',
                     data: {
                         nip: $("#nip").val(),
-                        tahun: $("#tahun").val()
+                        tahun: $("#tahun").val(),
+                        _token: "{{ csrf_token() }}",
                     }
                 },
                 columns: [{
@@ -203,6 +205,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNIPRW') }}",
+                    type:'post',
                     delay: 800,
                     data: function(params) {
                         return {

@@ -1,4 +1,4 @@
-@extends("layouts.app",["title"=>"Tambah KRS"])
+@extends("layouts.app",["title"=>"Tambah talent mapping"])
 @section('section')
 <style>
     .table>thead>tr>th {
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class='row mb-3 mt-3'>
-                            <div class='col-lg-2'>KRS Tahun</div>
+                            <div class='col-lg-2'>Talent Mapping Tahun</div>
                             <div class='col-lg-10'>
                                 <select name='tahun' class='form-control @error('tahun') is-invalid @enderror'>
                                     <option value="">Pilih Tahun</option>
@@ -80,22 +80,24 @@
                             </div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-2'>Jenis KRS</div>
+                            <div class='col-lg-2'>Jenis Talent Mapping</div>
                             <div class='col-lg-10'>
                                 <select name='jenis' id='jenis' class='form-control @error('jenis') is-invalid @enderror'  onchange="cekKrs()">
                                     <option value="">Pilih Jenis</option>
-                                    <option value="pengawas"  {{(old('jenis')=="pengawas") ? "Selected" : "" }}>KRS Pengawas</option>
+                                    <option value="pelaksana"  {{(old('jenis')=="pelaksana") ? "Selected" : "" }}>Pelaksana</option>
+                                    <option value="pengawas"  {{(old('jenis')=="pengawas") ? "Selected" : "" }}>Pengawas</option>
                                     <option value="administrator"  {{(old('jenis')=="administrator") ? "Selected" : "" }}>Administrator</option>
-                                    <option value="jpt"  {{(old('jenis')=="jpt") ? "Selected" : "" }}>JPT</option>
+                                    <option value="jpt_pratama"  {{(old('jenis')=="jpt_pratama") ? "Selected" : "" }}>JPT Pratama</option>
+                                    <option value="jpt_madya"  {{(old('jenis')=="jpt_madya") ? "Selected" : "" }}>JPT Madya</option>
                                 </select>
                                 @error('jenis') <span class='invalid-feedback'>{{$message}}</span>  @enderror
                             </div>
                         </div>
                         <div class='row mb-3' id='divbatch' style='display:none'>
-                            <div class='col-lg-2'>KRS Administrator Batch 1</div>
+                            <div class='col-lg-2'>Talent Mapping Batch 1</div>
                             <div class='col-lg-10'>
                                 <select name='id_krs_awal'id='id_krs_awal' class='form-control @error('id_krs_awal') is-invalid @enderror'>
-                                    <option value="">Pilih KRS Batch 1</option>
+                                    <option value="">Pilih Talent Mapping Batch 1</option>
                                     @foreach($dt1 as $key => $value)
                                         <option value="{{$value->id}}" {{($value->id===old('id_krs_awal')) ? "Selected" : "" }}>{{$value->deskripsi}}</option>
                                     @endforeach
@@ -127,12 +129,30 @@
     function cekKrs(){
         $("#id_krs_awal").val('');
         $("#fileupload").val('');
-        if($("#batch").val()=="2" && $("#jenis").val()=="administrator" ){
+        if($("#batch").val()=="2" && ($("#jenis").val()=="administrator" || $("#jenis").val()=="jpt_pratama" || $("#jenis").val()=="jpt_madya") ){
             $("#divbatch").show();
             $("#divFile").show();
+            $("#id_krs_awal").empty();
+            $("#id_krs_awal").append(`<option value="">Pilih Talent Mapping Batch 1</option>`);
+            $.ajax({
+                url:'{{ route('ajx-cekkrs') }}',
+                type:'post',
+                data:{jenis:$("#jenis").val(), _token: "{{ csrf_token() }}",},
+                dataType:'json',
+                success:function(result){
+                    
+                    $.each(result,function(i,item){
+                        $("#id_krs_awal").append(`<option value="`+item.id+`">`+item.deskripsi+`</option>`);
+                    })
+                },
+                error:function(){
+                    alert('gagal menampilkan talent mapping batch 1')
+                }
+            })
         }else{
             $("#divbatch").hide();
             $("#divFile").hide();
+            $("#id_krs_awal").val('');
         }
     }
 

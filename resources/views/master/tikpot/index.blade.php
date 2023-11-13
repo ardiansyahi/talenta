@@ -96,7 +96,8 @@
 
                     ajax: {
                        url:'{{ route('ajx-getTikpot') }}',
-                        data:{nama:$("#nama").val()}
+                       type:'POST',
+                        data:{nama:$("#nama").val(), _token: "{{ csrf_token() }}"}
                     },
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},

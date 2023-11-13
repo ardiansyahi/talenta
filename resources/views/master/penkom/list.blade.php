@@ -53,10 +53,10 @@
                                         <tr>
                                             <td align='center'>{{$key+1}}</td>
                                             <td align='center'>{{$item->tahun}}</td>
-                                            <td>{{$item->jenis}}</td>
+                                            <td>{{str_ireplace("_"," ",$item->jenis)}}</td>
                                             <td align='center'>
-                                                <a href="penkom/penkom-view/{{$item->tahun}}/{{$item->jenis}}/{{$item->hashname}}" class='btn btn-primary'>View</a>
-                                                <a href="penkom/penkom-delete/{{$item->tahun}}/{{$item->jenis}}/{{$item->hashname}}" onclick="return confirm('Yakin Anda Ingin Menghapus Data Penkom tahun  {{$item->tahun}} ?')" class='btn btn-danger'>Delete</a>
+                                                <a href="{{url('master/penkom/penkom-view/'.$item->tahun.'/'.$item->jenis.'/'.$item->hashname.'')}}" class='btn btn-primary'>View</a>
+                                                <a href="{{url('master/penkom/penkom-delete/'.$item->tahun.'/'.$item->jenis.'/'.$item->hashname.'')}}" onclick="return confirm('Yakin Anda Ingin Menghapus Data Penkom tahun  {{$item->tahun}} ?')" class='btn btn-danger'>Delete</a>
                                             </td>
                                         </tr>
 
@@ -99,7 +99,8 @@
                                             <option value='pelaksana' {{(old('jenis')=='pelaksana')?'selected':''}}>Penkom Pelaksana</option>
                                             <option value='pengawas' {{(old('jenis')=='pengawas')?'selected':''}}>Penkom Pengawas</option>
                                             <option value='administrator' {{(old('jenis')=='administrator')?'selected':''}}>Penkom Administrator</option>
-                                            <option value='jpt' {{(old('jenis')=='jpt')?'selected':''}}>Penkom JPT</option>
+                                            <option value='jpt_pratama' {{(old('jenis')=='jpt_pratama')?'selected':''}}>JPT Pratama</option>
+                                            <option value='jpt_madya' {{(old('jenis')=='jpt_madya')?'selected':''}}>JPT Madya</option>
                                         </select>
                                         @error('jenis') <span class='invalid-feedback'>{{$message}}</span>  @enderror
                                     </div>

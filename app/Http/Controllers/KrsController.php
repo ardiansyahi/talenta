@@ -142,28 +142,31 @@ class KrsController extends Controller
                     $totTemp=Krs_temp_model::select('id')->whereId_krs($data->id)->count();
                     $totData=KrsFinalModel::select('id')->whereId_krs($data->id)->whereJenis('isi')->count();
 
-                    if($data->batch=="2" && ($data->jenis=="administrator" || $data->jenis=="jpt")){
+                    if($data->batch=="2" && ($data->jenis=="administrator" || $data->jenis=="jpt_pratama"|| $data->jenis=="jpt_madya")){
                         $action='';
                     }else{
-                        $action="<a href='/talent-mapping/konfigurasi/".$data->id."' class='btn btn-dark btn-sm'  title='Setting Konfigurasi'>Hitung</a>";
+                        $action='<a href="'.url('/talent-mapping/konfigurasi/'.$data->id.'').'" class="btn btn-dark btn-sm"  title="Setting Konfigurasi">Hitung</a>';
                     }
-                    $action=$action."<a href='/talent-mapping/upload/".$data->id."' class='btn btn-success btn-sm'>Upload</a>";
+                    $action=$action.'<a href="'.url('/talent-mapping/upload/'.$data->id.'').'" class="btn btn-success btn-sm">Upload</a>';
                     // if($totTemp > 0 && $data->status=="in_progress"){
                     //     $action=$action." <a href='/talent-mapping/daftar-usulan/".$data->id."' class='btn btn-primary btn-sm'>Daftar Usulan</a>";
                     // }else if($data->batch=="2" && $data->jenis=="administrator" && $data->status=="in_progress"){
                     //     $action=$action." <a href='/talent-mapping/daftar-usulan/".$data->id."' class='btn btn-primary btn-sm'>Daftar Usulan</a>";
                     // }
                     if($totData > 0){
-                        $action=$action. " <a href='/talent-mapping/detail/".$data->id."' class='btn btn-info btn-sm'>Detail</a>";
+                        $action=$action. '<a href="'.url('/talent-mapping/detail/'.$data->id.'').'" class="btn btn-info btn-sm">Detail</a>';
                     }
-                    $action=$action.' <a href="/talent-mapping/delete/'.$data->id.'" onclick="return confirm(`Yakin Anda Ingin Menghapus Data KRS : '.$data->deskripsi.'`)" class="btn btn-sm btn-danger">Hapus</a>';
+                    $action=$action.' <a href="'.url('/talent-mapping/delete/'.$data->id.'').'" onclick="return confirm(`Yakin Anda Ingin Menghapus Data KRS : '.$data->deskripsi.'`)" class="btn btn-sm btn-danger">Hapus</a>';
                     return $action;
 
                 })
                 ->addColumn('status',function($data){
                     return str_ireplace("_"," ",$data->status);
                 })
-                ->rawColumns(['action','status'])
+                ->addColumn('jenis',function($data){
+                    return str_ireplace("_"," ",$data->jenis);
+                })
+                ->rawColumns(['action','status','jenis'])
                 ->make(true);
 
     }
@@ -438,8 +441,8 @@ class KrsController extends Controller
             'skp1'=>'required',
             'skp2'=>'required',
         ]);
-
-        $kueri=PegawaiTalentaModel::select('talenta_pegawai.pegawaiID','talenta_pegawai.nip','talenta_pegawai.thnpns','talenta_pegawai.nama_lengkap',
+       
+        $kueri=PegawaiTalentaModel::select('pegawaiID','talenta_pegawai.nip','talenta_pegawai.thnpns','talenta_pegawai.nama_lengkap',
                                         'talenta_pegawai.tgl_lahir','talenta_pegawai.pendidikan','talenta_pegawai.eselon','talenta_pegawai.tmteselon',
                                         'talenta_pegawai.pangkat','talenta_pegawai.golongan','talenta_pegawai.tmtpangkat','talenta_pegawai.level_jabatan',
                                         'talenta_pegawai.nama_jabatan','talenta_pegawai.tmt_jabatan','talenta_pegawai.satker','talenta_pegawai.tipepegawai',
@@ -658,13 +661,14 @@ class KrsController extends Controller
 
     }
     public function getDataStep2(Request $request){
+        //echo 'req'.$request->id_krs;
         $param='';
-        if ($request->ajax()) {
-            $data= KrsPegawaiTemplateModel::where('id_krs','=',$request->id_krs)->get();
+        //if($request->ajax()) {
+            $data= KrsPegawaiTemplateModel::where('id_krs','=',3)->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->make(true);
-        }
+        //}
     }
 
     public function export($id)
@@ -918,7 +922,8 @@ class KrsController extends Controller
                         ->whereId($request->id)->first();
             $dtBobot=KrsBobot::whereId_krs($request->id)->whereJenis('header')->first();
             $dtBobotIsi=KrsBobot::whereId_krs($request->id)->whereJenis('isi')->first();
-            return view('talent-mapping.krs-detail',compact('id','data','dtBobot','dtBobotIsi','nip'));
+            $status=$data->status;
+            return view('talent-mapping.krs-detail',compact('id','data','dtBobot','dtBobotIsi','nip','status'));
 
         }else{
             return view('notfound');
@@ -940,7 +945,7 @@ class KrsController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('nip', function ($data) {
-                    return "<a href='/report/pegawai/detail-talent/pengawas/".$data->id."/".$data->id_krs."/".$data->nip."' target='_BLANK' class='text-primary'>".$data->nip."</a>";
+                    return "<a href='".url('/report/pegawai/detail-talent/pengawas/'.$data->id.'/'.$data->id_krs.'/'.$data->nip.'')."' target='_BLANK' class='text-primary'>".$data->nip."</a>";
                 })
                 ->addColumn('potensial',function($data){
                     $json=json_decode($data->nilai);
@@ -1030,6 +1035,18 @@ class KrsController extends Controller
         }else{
             $posts=array('response'=>'success','data'=>array(),'header'=>$header);
         }
+
+        return json_encode($posts);
+    }
+
+    public function getcekkrs(Request $request){
+        header('Access-Control-Allow-Origin: *');
+        header("Content-type: application/json");
+        $kueri=KrsModel::select('id','deskripsi')
+                ->where('jenis','=',$request->jenis)
+                ->orderBy('tahun','desc')
+                ->get();
+        $posts=$kueri;
 
         return json_encode($posts);
     }
