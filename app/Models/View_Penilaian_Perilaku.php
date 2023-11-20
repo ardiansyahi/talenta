@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class View_Penilaian_Perilaku extends Model
 {
     use HasFactory;
-    protected $connection='pgsql2';
+    protected $connection='pgsql';
     protected $table='rekap_penilaianperilaku_nilai';
 }
