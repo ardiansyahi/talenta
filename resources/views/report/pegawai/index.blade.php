@@ -266,11 +266,11 @@
 
                 </table><br>
                 <h2>History Talent Mapping</h2><hr>
-                <h3>Pengawas</h3>
+                
                 <table id='tbl-pengawas' class='table table-bordered table-striped' width='100%'>
                     <tr >
                         <td class="bgtable">Tahun</td>
-                        <td class="bgtable">Jenis</td>
+                        <td class="bgtable">Level</td>
                         <td class="bgtable">Potensial</td>
                         <td class="bgtable">Kinerja</td>
                         <td class="bgtable">Kotak</td>
