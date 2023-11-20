@@ -612,8 +612,9 @@ class KrsController extends Controller
                 ->where('talenta_penkom.tahun','<=',$tahun_krs)
                 ->where('talenta_penkom.jenis','=',$request->jenis_penkom);
         $finalQ=$kueri->get();
-
-        KrsPegawaiTemplateModel::whereId_krs($request->id)->whereCreated_by(Auth::user()->userid)->delete();
+        
+        KrsPegawaiTemplateModel::where('id_krs','=',$request->id)->delete();
+        
 
         foreach($finalQ as $key2=>$rw){
             $dtPenkom=GlobalHelper::getDataPenkom($rw->nip,$tahun_krs,$request->jenis_penkom);
@@ -648,7 +649,7 @@ class KrsController extends Controller
 
             ]);
         }
-        return redirect('/talent-mapping/step2/'.$request->id.'/'.$request->jenis_penkom.'');
+       return redirect('/talent-mapping/step2/'.$request->id.'/'.$request->jenis_penkom.'');
 
     }
 
@@ -664,7 +665,7 @@ class KrsController extends Controller
         //echo 'req'.$request->id_krs;
         $param='';
         //if($request->ajax()) {
-            $data= KrsPegawaiTemplateModel::where('id_krs','=',3)->get();
+            $data= KrsPegawaiTemplateModel::where('id_krs','=',$request->id_krs)->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->make(true);
