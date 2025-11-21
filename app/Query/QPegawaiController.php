@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\GlobalHelper;
 use App\Models\LogsModel;
+ini_set('max_execution_time', 0); //0=NOLIMIT
+ini_set('memory_limit', '-1');
+set_time_limit(0);
+
 class QPegawaiController
 {
     public function getPegawai(){
@@ -105,11 +109,11 @@ class QPegawaiController
                             // );
                             //GlobalHelper::cekUser($dt,$json['PegawaiKRS'][$i]['NIPBARU']);
                             //GlobalHelper::cekUser('tes',$json['PegawaiKRS'][$i]['NIPBARU']);
-                            $kueri=User::select('userid')->whereUserid($json['PegawaiKRS'][$i]['NIPBARU'])->first();
-                            if($kueri){
+                            //echo User::select('userid')->where('userid','=',$json['PegawaiKRS'][$i]['NIPBARU'])->count();
+                            if(User::select('userid')->where('userid','=',$json['PegawaiKRS'][$i]['NIPBARU'])->count() > 0){
                                 User::whereUserid($json['PegawaiKRS'][$i]['NIPBARU'])->update([
                                     'isActive'=>0,
-                                ]);
+                                ]);                                
                             }else{
                                 User::create([
                                     'userid'=>$json['PegawaiKRS'][$i]['NIPBARU'],
@@ -119,6 +123,8 @@ class QPegawaiController
                                     'id_akses'=>5
 
                                 ]);
+
+                                
                             }
 
                         }

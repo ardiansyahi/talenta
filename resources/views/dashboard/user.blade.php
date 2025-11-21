@@ -67,12 +67,14 @@
                 })
                 .done(function(result) {
                     var response = jQuery.parseJSON(result);
+                    if(response.pegawai.tmteselon == null){
+                        var data = "-"; 
+                    }else{
+                        var data = response.pegawai.tmteselon;
+                    }
                     $("#divbody").append(`
                     <table class='table table-bordered table-striped' width='100%'>
-                    <tr>
-                        <td width='20%'>Pegawai ID </td>
-                        <td width='80%'>` + response.pegawai.pegawaiID + `</td>
-                    </tr>
+                    
                      <tr>
                         <td width='20%'>NIP </td>
                         <td width='80%'>` + response.pegawai.nip + `</td>
@@ -95,7 +97,7 @@
                     </tr>
                      <tr>
                         <td width='20%'>TMT Eselon </td>
-                        <td width='80%'>` + response.pegawai.tmteselon + `</td>
+                        <td width='80%'>` + data + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Pangkat </td>
@@ -115,7 +117,7 @@
                     </tr>
                      <tr>
                         <td width='20%'>Nama Jabatan </td>
-                        <td width='80%'>` + response.pegawai.nama_jabatan + `</td>
+                        <td width='80%'>` + response.pegawai.jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Jabatan</td>
@@ -123,7 +125,7 @@
                     </tr>
                      <tr>
                         <td width='20%'>Satker</td>
-                        <td width='80%'>` + response.pegawai.satker + `</td>
+                        <td width='80%'>` + response.pegawai.nama_unit + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Tipe </td>
@@ -156,12 +158,28 @@
                         var str = item.jenis;
                         str = str.replace(/_/g, ' ');
                         var myArr = JSON.parse(item.nilai);
+                        $potensial='';
+                        if(myArr[2]=="Kotak 1" || myArr[2]=="Kotak 2" || myArr[2]=="Kotak 4"){
+                            $potensial='Rendah';
+                        } else if(myArr[2]=="Kotak 3" || myArr[2]=="Kotak 5" || myArr[2]=="Kotak 7"){
+                            $potensial='Menengah';
+                        }else{
+                            $potensial='Tinggi';
+                        }
+                        $kinerja='';
+                        if(myArr[2]=="Kotak 1" || myArr[2]=="Kotak 3" || myArr[2]=="Kotak 6"){
+                            $kinerja='Dibawah Ekspektasi';
+                        } else if(myArr[2]=="Kotak 2" || myArr[2]=="Kotak 5" || myArr[2]=="Kotak 8"){
+                            $kinerja='Sesuai Ekspektasi';
+                        }else{
+                            $kinerja='Diatas Ekspektasi';
+                        }
                         $('#tbl-pengawas tr:last').after(`
                     <tr >
                         <td class="bgbold">` + item.tahun + `</td>
                         <td class="bgbold">` + str + `</td>
-                        <td class="bgbold">` + myArr[0] + `</td>
-                        <td class="bgbold">` + myArr[1] + `</td>
+                        <td class="bgbold">` + $potensial + `</td>
+                        <td class="bgbold">` + $kinerja + `</td>
                         <td class="bgbold">` + myArr[2] + `</td>
                         <td class="bgbold"><a href="{{url('/report/pegawai/detail-talent/pengawas/` + item.id + `/` + item
                             .id_krs + `/` + item.nip + `')}}" target="_BLANK" class="btn btn-primary">View Detail</a></td>
@@ -170,11 +188,27 @@
 
                     $.each(response.administrator, function(i, item) {
                         var myArr = JSON.parse(item.nilai);
+                        $potensial='';
+                        if(myArr[2]=="Kotak 1" || myArr[2]=="Kotak 2" || myArr[2]=="Kotak 4"){
+                            $potensial='Rendah';
+                        } else if(myArr[2]=="Kotak 3" || myArr[2]=="Kotak 5" || myArr[2]=="Kotak 7"){
+                            $potensial='Menengah';
+                        }else{
+                            $potensial='Tinggi';
+                        }
+                        $kinerja='';
+                        if(myArr[2]=="Kotak 1" || myArr[2]=="Kotak 3" || myArr[2]=="Kotak 6"){
+                            $kinerja='Dibawah Ekspektasi';
+                        } else if(myArr[2]=="Kotak 2" || myArr[2]=="Kotak 5" || myArr[2]=="Kotak 8"){
+                            $kinerja='Sesuai Ekspektasi';
+                        }else{
+                            $kinerja='Diatas Ekspektasi';
+                        }
                         $('#tbl-admin tr:last').after(`
                     <tr >
                         <td class="bgbold">` + item.tahun + `</td>
-                        <td class="bgbold">` + myArr[0] + `</td>
-                        <td class="bgbold">` + myArr[1] + `</td>
+                        <td class="bgbold">` + $potensial + `</td>
+                        <td class="bgbold">` + $kinerja + `</td>
                         <td class="bgbold">` + myArr[2] + `</td>
                         <td class="bgbold"><a href="{{url('/report/pegawai/detail-talent/administrator/` + item.id + `/` +
                             item.id_krs + `/` + item.nip + `')}}" target="_BLANK">View Detail</a></td>

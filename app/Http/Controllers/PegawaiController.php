@@ -12,6 +12,10 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Query\QPegawaiController;
 
+ini_set('max_execution_time', 0); //0=NOLIMIT
+ini_set('memory_limit', '-1');
+set_time_limit(0);
+
 class PegawaiController extends Controller
 {
     public function __construct(QPegawaiController $QPegawaiController)

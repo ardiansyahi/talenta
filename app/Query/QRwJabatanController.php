@@ -11,6 +11,11 @@ use App\Helpers\GlobalHelper;
 use Illuminate\Support\Str;
 use App\Models\LogsModel;
 use Response;
+
+ini_set('max_execution_time', 0); //0=NOLIMIT
+ini_set('memory_limit', '-1');
+set_time_limit(0);
+
 class QRwJabatanController
 
 {

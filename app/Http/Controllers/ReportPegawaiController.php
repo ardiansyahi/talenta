@@ -62,7 +62,10 @@ class ReportPegawaiController extends Controller
         header('Access-Control-Allow-Origin: *');
         header("Content-type: application/json");
 
-        $kueri=PegawaiTalentaModel::whereNip($request->nip)->first();
+        //$kueri=PegawaiTalentaModel::whereNip($request->nip)->first();
+        $kueri = PegawaiTalentaModel::where('talenta_pegawai.nip', $request->nip)
+                            ->join('pegawai', 'talenta_pegawai.nip', '=', 'pegawai.nip')
+                            ->first();
         $talentmapping=KrsFinalModel::select('talenta_krs_final.nilai','talenta_krs.tahun','talenta_krs.jenis','talenta_krs_final.id','talenta_krs_final.nip','talenta_krs_final.id_krs')
                     ->join('talenta_krs','talenta_krs.id','=','talenta_krs_final.id_krs')
                     ->where('talenta_krs_final.nip','=',$request->nip)

@@ -44,7 +44,8 @@
                                     <div class="login p-50">
                                         <h1 class="mb-2">Manajemen Talenta</h1>
                                         <p>Welcome back, please login to your account.</p><br/>
-                                        <form action="{{route('login')}}" method="post">
+                                        <form action="{{ route('login') }}" method="post">
+											
                                         @csrf
                                             <div class="row">
                                                 <div class="col-12">
