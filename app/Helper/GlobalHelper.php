@@ -252,18 +252,18 @@ class GlobalHelper {
         return $total;
     }
     public static function getSkorJabatan($id_krs,$kriteria){
-        // $kueri=KonfigurasiModel::select('isidata')
-        //                         ->whereId_krs($id_krs)
-        //                         ->whereJenis('riwayat_jabatan')
-        //                         ->whereRaw('CAST(kriteria as INT) <= '.$kriteria)
-        //                         ->orderBy('kriteria','desc')->first();
-
-        //sql
         $kueri=KonfigurasiModel::select('isidata')
                                 ->whereId_krs($id_krs)
                                 ->whereJenis('riwayat_jabatan')
-                                ->where('kriteria','<=',$kriteria)
+                                ->whereRaw('CAST(kriteria as INT) <= '.$kriteria)
                                 ->orderBy('kriteria','desc')->first();
+
+        //sql
+        // $kueri=KonfigurasiModel::select('isidata')
+        //                         ->whereId_krs($id_krs)
+        //                         ->whereJenis('riwayat_jabatan')
+        //                         ->where('kriteria','<=',$kriteria)
+        //                         ->orderBy('kriteria','desc')->first();
         $total=0;
         if($kueri){
             $total=$kueri->isidata;
@@ -314,17 +314,17 @@ class GlobalHelper {
     }
 
     public static function getSkorDT($id_krs,$kriteria){
-        // $kueri=KonfigurasiModel::select('isidata')
-        //                         ->whereId_krs($id_krs)
-        //                         ->whereJenis('diklat_teknis')
-        //                         ->whereRaw('CAST(kriteria as INT) <= '.$kriteria)
-        //                         ->orderBy('kriteria','desc')->first();
-        //sql
         $kueri=KonfigurasiModel::select('isidata')
                                 ->whereId_krs($id_krs)
                                 ->whereJenis('diklat_teknis')
-                                ->where('kriteria','<=',$kriteria)
+                                ->whereRaw('CAST(kriteria as INT) <= '.$kriteria)
                                 ->orderBy('kriteria','desc')->first();
+        //sql
+        // $kueri=KonfigurasiModel::select('isidata')
+        //                         ->whereId_krs($id_krs)
+        //                         ->whereJenis('diklat_teknis')
+        //                         ->where('kriteria','<=',$kriteria)
+        //                         ->orderBy('kriteria','desc')->first();
         $total=0;
         if($kueri){
             $total=$kueri->isidata;
@@ -360,9 +360,9 @@ class GlobalHelper {
 
     public static function getMaxValueKonfig($id_krs,$jenis){
 
-        // $kueri=KonfigurasiModel::whereId_krs($id_krs)->whereJenis($jenis)->orderByRaw('CAST(isidata as INT) desc')->first();
+         $kueri=KonfigurasiModel::whereId_krs($id_krs)->whereJenis($jenis)->orderByRaw('CAST(isidata as INT) desc')->first();
         //sql
-         $kueri=KonfigurasiModel::whereId_krs($id_krs)->whereJenis($jenis)->orderBy('isidata','desc')->first();
+        // $kueri=KonfigurasiModel::whereId_krs($id_krs)->whereJenis($jenis)->orderBy('isidata','desc')->first();
         $total=0;
         if($kueri){
             $total=$kueri->isidata;

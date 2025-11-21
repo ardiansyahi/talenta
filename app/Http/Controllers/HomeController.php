@@ -13,6 +13,7 @@ class HomeController extends Controller
         $rr=array('module'=>'home','action'=>'view','deskripsi'=>'Membuka halaman home','res'=>'success','userid'=>session()->get('nip'));
         LogsModel::saveLogs($rr);
         $sesakses=\Session::get('id_akses');
+        //echo $sesakses; exit();
         switch($sesakses){
             case "1":
             case "2":

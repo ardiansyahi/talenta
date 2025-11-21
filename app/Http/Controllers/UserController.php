@@ -38,7 +38,7 @@ class UserController extends Controller
         return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function ($data) {
-                        return '<a href="/setting/user/edit/'.$data->id.'" class="btn btn-primary">Ubah</a>';
+                        return '<a href="'.url("setting/user/edit/".$data->id."").'" class="btn btn-primary">Ubah</a>';
                     })
                     ->rawColumns(['action'])
                     ->make(true);

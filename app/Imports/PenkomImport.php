@@ -67,6 +67,8 @@ class PenkomImport implements ToModel,WithStartRow
                 break;
             case "administrator":
             case "jpt":
+            case "jpt_pratama":
+            case "jpt_madya":
                 return new PenkomModel([
                     'nip'     => $row[1],
                     'nama'    => $row[2],

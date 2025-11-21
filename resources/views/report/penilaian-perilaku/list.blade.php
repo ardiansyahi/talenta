@@ -111,10 +111,12 @@
 
                 ajax: {
                     url: '{{ route('ajx-getPenilaianPerilaku') }}',
+                    type:'post',
                     data: {
                         pegawai_dinilai: $("#pegawai_dinilai").val(),
                         nama_dinilai: $("#nama_dinilai").val(),
-                        tahun: $("#tahun").val()
+                        tahun: $("#tahun").val(),
+                        _token: "{{ csrf_token() }}"
                     }
                 },
                 columns: [{

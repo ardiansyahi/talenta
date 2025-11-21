@@ -30,8 +30,8 @@ class AksesController extends Controller
         return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function ($data) {
-                        return '<a href="/setting/akses/edit/'.$data->id.'" class="btn btn-primary">Ubah</a>
-                                <a href="/setting/akses/delete/'.$data->id.'"  onclick="return confirm(`Yakin Anda Ingin Menghapus Data '.$data->nama.'`)" class="btn btn-danger">Hapus</a>';
+                        return '<a href="'.url("setting/akses/edit/".$data->id."").'" class="btn btn-primary">Ubah</a>
+                                <a href="'.url("setting/akses/delete/".$data->id."").'"  onclick="return confirm(`Yakin Anda Ingin Menghapus Data '.$data->nama.'`)" class="btn btn-danger">Hapus</a>';
                     })
                     ->rawColumns(['action'])
                     ->make(true);

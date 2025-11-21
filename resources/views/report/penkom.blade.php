@@ -134,10 +134,12 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('ajx-getPenkom') }}',
+                    type:'post',
                     data: {
                         nip: $("#nip").val(),
                         tahun: $("#tahun").val(),
-                        jenis: $("#jenis").val()
+                        jenis: $("#jenis").val(),
+                        _token: "{{ csrf_token() }}",
                     }
                 },
                 columns: [{
@@ -208,6 +210,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNipPegawai') }}",
+                    type:'post',
                     delay: 800,
                     data: function(params) {
                         return {

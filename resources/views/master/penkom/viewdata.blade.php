@@ -54,7 +54,7 @@
                             <tr>
                                 <td>Jenis Penkom </td>
                                 <td> : </td>
-                                <td>{{$pelaksana}} </td>
+                                <td>{{str_ireplace("_"," ",$pelaksana)}} </td>
                             </tr>
                         </table><hr/>
                         <table id="datatable2" class="display compact table table-striped table-bordered"  width="100%">
@@ -92,7 +92,8 @@
             serverSide: true,
             ajax: {
                 url:'{{ route('ajx-getPenkomDetail') }}',
-                data:{hashname:'{{$hashname}}',tahun:'{{$tahun}}',jenis:'{{$pelaksana}}'}
+                data:{hashname:'{{$hashname}}',tahun:'{{$tahun}}',jenis:'{{$pelaksana}}',_token: "{{ csrf_token() }}",},
+                type:'post'
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},

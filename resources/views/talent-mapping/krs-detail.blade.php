@@ -46,11 +46,11 @@
 
     @if ($status == 'delete')
         <div class='alert alert-inverse-danger mb-3 text-dark ' style='font-size:20px'>
-            <i class='fa fa-info-circle'></i> KRS ini sudah dihapus
+            <i class='fa fa-info-circle'></i> Talent Mapping ini sudah dihapus
         </div>
     @elseif ($status == 'in_progress')
         <div class='alert alert-inverse-danger mb-3 text-dark ' style='font-size:20px'>
-            <i class='fa fa-info-circle'></i> KRS ini statusnya In Progress
+            <i class='fa fa-info-circle'></i> Talent Mapping ini statusnya In Progress
         </div>
     @else
         <div class='row'>
@@ -58,30 +58,33 @@
                 <div class="card card-statistics">
                     <div class="card-body">
                         <div class='row mb-3 mt-3'>
-                            <div class='col-lg-1'>KRS Tahun</div>
-                            <div class='col-lg-11'>{{ $data->tahun }}</div>
+                            <div class='col-lg-2'>Talent Mapping Tahun</div>
+                            <div class='col-lg-10'>{{ $data->tahun }}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Jenis KRS</div>
-                            <div class='col-lg-11'>{{ $data->jenis }}</div>
+                            <div class='col-lg-2'>Jenis Talent Mapping</div>
+                            <div class='col-lg-10'>{{ str_ireplace("_"," ",$data->jenis) }}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Batch</div>
-                            <div class='col-lg-11'>{{ $data->batch }}</div>
+                            <div class='col-lg-2'>Batch</div>
+                            <div class='col-lg-10'>{{ $data->batch }}</div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Status</div>
-                            <div class='col-lg-11'>
+                            <div class='col-lg-2'>Status</div>
+                            <div class='col-lg-10'>
                                 {{ str_ireplace('_', ' ', $data->status) }}
-                                <a href="/talent-mapping/update-status/{{ $id }}/{{ $data->status == 'non_publish' ? 'publish' : 'non_publish' }}"
+                                @php
+                                    $status=($data->status == 'non_publish') ? 'publish' : 'non_publish';
+                                @endphp
+                                <a href="{{url('/talent-mapping/update-status/'.$id.'/'.$status.'')}}"
                                     class="{{ $data->status == 'non_publish' ? 'btn btn-primary btn-sm' : 'btn btn-danger btn-sm' }} ml-4">
                                     {{ $data->status == 'non_publish' ? 'Publish Talent Mapping' : 'Non Publish Talent Mapping' }}
                                 </a>
                             </div>
                         </div>
                         <div class='row mb-3'>
-                            <div class='col-lg-1'>Deskripsi</div>
-                            <div class='col-lg-11'>{{ $data->deskripsi }}</div>
+                            <div class='col-lg-2'>Deskripsi</div>
+                            <div class='col-lg-10'>{{ $data->deskripsi }}</div>
                         </div>
                     </div>
                 </div>
@@ -122,9 +125,9 @@
                                     <input type='submit' class='btn btn-primary' value='Filter' name='submit'>
                                 </div>
                                 <div class='col-lg-7 mr-auto float-right'>
-                                    <a href="/talent-mapping/export-krs-v2/{{ $id }}"
+                                    <a href="{{url('/talent-mapping/export-krs-v2/'.$id.'')}}"
                                         class='btn btn-success float-right mb-3 ml-2'>Export Excel Kotak 7,8,9</a>
-                                    <a href="/talent-mapping/export-krs/{{ $id }}"
+                                    <a href="{{url('/talent-mapping/export-krs/'.$id.'')}}"
                                         class='btn btn-success float-right mb-3 ml-2'>Export Excel (ALL)</a>
 
                                 </div>
@@ -155,7 +158,7 @@
                         <hr>
                         <div class='row'>
                             <div class='col-sm-12'>
-                                <a href="/talent-mapping/konfigbobot/{{ $id }}"
+                                <a href="{{url('/talent-mapping/konfigbobot/'.$id.'')}}"
                                     class='btn btn-primary float-right mb-3'> Ubah Konfigurasi Bobot</a>
                                 @php
                                     $totalBP = count(json_decode($dtBobot->potensial));
@@ -222,6 +225,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNipPegawai') }}",
+                    type:'post',
                     delay: 800,
                     data: function(params) {
                         return {
@@ -252,9 +256,11 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('talent-mapping/getdetailkrs') }}',
+                    type:'post',
                     data: {
                         id_krs: $("#id").val(),
-                        nip: $("#nip").val()
+                        nip: $("#nip").val(),
+                        _token: "{{ csrf_token() }}"
                     }
                 },
                 columns: [{

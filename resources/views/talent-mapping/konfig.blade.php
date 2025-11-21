@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Konfigurasi KRS'])
+@extends('layouts.app', ['title' => 'Konfigurasi Talent Mapping'])
 @section('section')
     <style>
         .table>thead>tr>th {
@@ -47,12 +47,12 @@
             <div class="card card-statistics">
                 <div class="card-body">
                     <div class='row mb-3 mt-3'>
-                        <div class='col-lg-1'>KRS Tahun</div>
+                        <div class='col-lg-1'>Talent Mapping Tahun</div>
                         <div class='col-lg-11'>{{ $data->tahun }}</div>
                     </div>
                     <div class='row mb-3'>
-                        <div class='col-lg-1'>Jenis KRS</div>
-                        <div class='col-lg-11'>{{ $data->jenis }}</div>
+                        <div class='col-lg-1'>Jenis Talent Mapping</div>
+                        <div class='col-lg-11'>{{ str_ireplace("_"," ",$data->jenis) }}</div>
                     </div>
                     <div class='row mb-3'>
                         <div class='col-lg-1'>Deskripsi</div>
@@ -182,7 +182,7 @@
                 <div class="card-body">
                     @if ($status == 'delete')
                         <div class='alert alert-inverse-danger mb-3 text-dark ' style='font-size:20px'>
-                            <i class='fa fa-info-circle'></i> KRS ini sudah dihapus
+                            <i class='fa fa-info-circle'></i> Talent Mapping ini sudah dihapus
                         </div>
                     @else
                         <div class='alert alert-inverse-primary mb-3 text-dark'>
@@ -210,7 +210,9 @@
                                         <option value='administrator'
                                             {{ @$dataPenkom->kriteria == 'administrator' ? 'selected' : '' }}>Administrator
                                         </option>
-                                        <option value='jpt' {{ @$dataPenkom->kriteria == 'jpt' ? 'selected' : '' }}>JPT
+                                        <option value='jpt_pratama' {{ @$dataPenkom->kriteria == 'jpt_pratama' ? 'selected' : '' }}>JPT Pratama
+                                        </option>
+                                        <option value='jpt_madya' {{ @$dataPenkom->kriteria == 'jpt_madya' ? 'selected' : '' }}>JPT Madya
                                         </option>
                                     </select>
                                     @error('jenis_penkom')

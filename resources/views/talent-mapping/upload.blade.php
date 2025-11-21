@@ -47,7 +47,7 @@
     </div>
     @if ($status == 'delete')
         <div class='alert alert-inverse-danger mb-3 text-dark ' style='font-size:20px'>
-            <i class='fa fa-info-circle'></i> KRS ini sudah dihapus
+            <i class='fa fa-info-circle'></i> Talent Mapping ini sudah dihapus
         </div>
     @else
         <div class='alert alert-inverse-primary mb-3 text-dark'>
@@ -62,12 +62,12 @@
                             @csrf
                             <input type='hidden' name='id' value='{{ $id }}'>
                             <div class='row mb-3 mt-3'>
-                                <div class='col-lg-2'>KRS Tahun</div>
+                                <div class='col-lg-2'>Talent Mapping Tahun</div>
                                 <div class='col-lg-10'>{{ $data->tahun }}</div>
                             </div>
                             <div class='row mb-3'>
-                                <div class='col-lg-2'>Jenis KRS</div>
-                                <div class='col-lg-10'>{{ $data->jenis }}</div>
+                                <div class='col-lg-2'>Jenis Talent Mapping</div>
+                                <div class='col-lg-10'>{{ str_ireplace("_"," ",$data->jenis) }}</div>
                             </div>
                             <div class='row mb-3'>
                                 <div class='col-lg-2'>Batch</div>

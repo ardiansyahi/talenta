@@ -25,7 +25,7 @@
                                 <a href="{{ route('home') }}"><i class="ti ti-home"></i></a>
                             </li>
                             <li class="breadcrumb-item">
-                                Hitung KRS
+                                Talent Mapping
                             </li>
                             <li class="breadcrumb-item active text-primary" aria-current="page">Talent Mapping</li>
                         </ol>
@@ -73,10 +73,10 @@
                                 <input type='submit' class='btn btn-primary' value='Filter' name='submit'>
                             </div>
                             <div class='col-lg-7 mr-auto float-right'>
-                                <a href="/talent-mapping/export/{{ $id }}"
+                                <a href="{{url('/talent-mapping/export/'.$id.'')}}"
                                     class='btn btn-success float-right mb-3 ml-2'>Export Excel</a>
-                                <a href="/talent-mapping/upload/{{ $id }}"
-                                    class='btn btn-primary float-right mb-3'>Upload KRS
+                                <a href="{{url('/talent-mapping/upload/'.$id.'')}}"
+                                    class='btn btn-primary float-right mb-3'>Upload Talent Mapping
                                     Final</a>
                             </div>
                         </div>
@@ -172,9 +172,11 @@
                 ordering: false,
                 ajax: {
                     url: '{{ route('ajx-getKrsTemp') }}',
+                    type:'post',
                     data: {
                         id_krs: id,
-                        nip: $("#nip").val()
+                        nip: $("#nip").val(),
+                        _token: "{{ csrf_token() }}",
                     }
                 },
                 columns: [{
@@ -414,6 +416,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNipPegawai') }}",
+                    type:'post',
                     delay: 800,
                     data: function(params) {
                         return {

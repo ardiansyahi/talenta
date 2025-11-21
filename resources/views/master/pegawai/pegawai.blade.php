@@ -125,13 +125,15 @@
         $(document).ready(function() {
 
             $('#datatable2').dataTable({
-                "searching": false,
+                "searching": true,
+                "paging": true,
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('ajx-getPegawaiJson') }}',
+                    url: '{{ url('ajx-getPegawaiJson') }}',
+                    type:'POST',
                     data: {
-                        nip: $("#nip").val()
+                        nip: $("#nip").val(),_token: "{{ csrf_token() }}"
                     }
                 },
                 columns: [{
@@ -175,79 +177,81 @@
         function showGlobalModal(nip) {
             $("#modal-body-detail").empty();
             $("#modalGlobalTitle").html('Detail Pegawai');
-            $.getJSON("{{ route('ajx-getPegawaiDetail') }}", {
-                    nip: nip
+            $.post("{{ route('ajx-getPegawaiDetail') }}", {
+                    nip: nip,
+                    _token: "{{ csrf_token() }}",
                 })
                 .done(function(result) {
+                    var response = jQuery.parseJSON(result);
                     $("#modal-body-detail").append(`
                 <table class='table table-bordered table-striped' width='100%'>
                     <tr>
                         <td width='20%'>Pegawai ID </td>
-                        <td width='80%'>` + result.pegawaiID + `</td>
+                        <td width='80%'>` + response.pegawaiID + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>NIP </td>
-                        <td width='80%'>` + result.nip + `</td>
+                        <td width='80%'>` + response.nip + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Nama  </td>
-                        <td width='80%'>` + result.nama_lengkap + `</td>
+                        <td width='80%'>` + response.nama_lengkap + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Tanggal Lahir</td>
-                        <td width='80%'>` + result.tgl_lahir + `</td>
+                        <td width='80%'>` + response.tgl_lahir + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Pendidikan</td>
-                        <td width='80%'>` + result.pendidikan + `</td>
+                        <td width='80%'>` + response.pendidikan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Eselon </td>
-                        <td width='80%'>` + result.eselon + `</td>
+                        <td width='80%'>` + response.eselon + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Eselon </td>
-                        <td width='80%'>` + result.tmteselon + `</td>
+                        <td width='80%'>` + response.tmteselon + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Pangkat </td>
-                        <td width='80%'>` + result.pangkat + `</td>
+                        <td width='80%'>` + response.pangkat + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Golongan </td>
-                        <td width='80%'>` + result.golongan + `</td>
+                        <td width='80%'>` + response.golongan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Pangkat</td>
-                        <td width='80%'>` + result.tmtpangkat + `</td>
+                        <td width='80%'>` + response.tmtpangkat + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Level Jabatan </td>
-                        <td width='80%'>` + result.level_jabatan + `</td>
+                        <td width='80%'>` + response.level_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Nama Jabatan </td>
-                        <td width='80%'>` + result.nama_jabatan + `</td>
+                        <td width='80%'>` + response.nama_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Jabatan</td>
-                        <td width='80%'>` + result.tmt_jabatan + `</td>
+                        <td width='80%'>` + response.tmt_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Satker</td>
-                        <td width='80%'>` + result.satker + `</td>
+                        <td width='80%'>` + response.satker + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Tipe </td>
-                        <td width='80%'>` + result.tipepegawai + `</td>
+                        <td width='80%'>` + response.tipepegawai + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Status</td>
-                        <td width='80%'>` + result.statuspegawai + `</td>
+                        <td width='80%'>` + response.statuspegawai + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Kedudukan </td>
-                        <td width='80%'>` + result.kedudukan + `</td>
+                        <td width='80%'>` + response.kedudukan + `</td>
                     </tr>
 
 
@@ -265,6 +269,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNipPegawai') }}",
+                    type:'POST',
                     delay: 800,
                     data: function(params) {
                         return {

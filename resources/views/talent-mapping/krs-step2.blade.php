@@ -45,9 +45,9 @@
         <div class="col-lg-12">
             <div class="card card-statistics">
                 <div class="card-body">
-                    <a href='/talent-mapping/step3/{{$id}}' class='btn btn-primary float-right ml-2 mb-3'>Lanjut ke Step 3</a>
+                    <a href="{{url('/talent-mapping/step3/'.$id.'')}}" class='btn btn-primary float-right ml-2 mb-3'>Lanjut ke Step 3</a>
 
-                    <a href='/talent-mapping/konfigurasi/{{$id}}' class='btn btn-dark float-right mb-3'>Kembali ke Step 1</a>
+                    <a href="{{url('/talent-mapping/konfigurasi/'.$id.'')}}" class='btn btn-dark float-right mb-3'>Kembali ke Step 1</a>
 
                     <div class="datatable-wrapper table-responsive">
                         <table id="datatable2" class="display compact table table-striped table-bordered"  width="100%">
@@ -81,12 +81,13 @@
     $(document).ready(function(){
 
          $('#datatable2').dataTable({
-            searching: false, paging: true, info: true,
+            "searching": false, "paging": true, "info": true,
             processing: true,
             serverSide: true,
                     ajax: {
                        url:'{{ route('talent-mapping/getdatastep2') }}',
-                       data:{id_krs:'{{$id}}'}
+                       type:'POST',
+                       data:{id_krs:'{{$id}}',_token: "{{ csrf_token() }}"},
                     },
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},

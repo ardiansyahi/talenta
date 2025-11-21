@@ -139,8 +139,10 @@
                 "searching": false,
                 ajax: {
                     url: '{{ route('ajx-getPegawaiJson') }}',
+                    type:'POST',
                     data: {
-                        nip: $("#nip").val()
+                        nip: $("#nip").val(),
+                        _token: "{{ csrf_token() }}",
 
                     }
                 },
@@ -185,116 +187,114 @@
         function showGlobalModal(nip) {
             $("#modal-body-detail").empty();
             $("#modalGlobalTitle").html('Detail Pegawai');
-            $.getJSON("{{ route('ajx-getPegawaiHistory') }}", {
-                    nip: nip
+            $.post("{{ route('ajx-getPegawaiHistory') }}", {
+                    nip: nip,
+                    _token: "{{ csrf_token() }}",
                 })
                 .done(function(result) {
+                    var response = jQuery.parseJSON(result);
                     $("#modal-body-detail").append(`
                 <table class='table table-bordered table-striped' width='100%'>
                     <tr>
                         <td width='20%'>Pegawai ID </td>
-                        <td width='80%'>` + result.pegawai.pegawaiID + `</td>
+                        <td width='80%'>` + response.pegawai.pegawaiID + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>NIP </td>
-                        <td width='80%'>` + result.pegawai.nip + `</td>
+                        <td width='80%'>` + response.pegawai.nip + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Nama  </td>
-                        <td width='80%'>` + result.pegawai.nama_lengkap + `</td>
+                        <td width='80%'>` + response.pegawai.nama_lengkap + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Tanggal Lahir</td>
-                        <td width='80%'>` + result.pegawai.tgl_lahir + `</td>
+                        <td width='80%'>` + response.pegawai.tgl_lahir + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Pendidikan</td>
-                        <td width='80%'>` + result.pegawai.pendidikan + `</td>
+                        <td width='80%'>` + response.pegawai.pendidikan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Eselon </td>
-                        <td width='80%'>` + result.pegawai.eselon + `</td>
+                        <td width='80%'>` + response.pegawai.eselon + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Eselon </td>
-                        <td width='80%'>` + result.pegawai.tmteselon + `</td>
+                        <td width='80%'>` + response.pegawai.tmteselon + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Pangkat </td>
-                        <td width='80%'>` + result.pegawai.pangkat + `</td>
+                        <td width='80%'>` + response.pegawai.pangkat + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Golongan </td>
-                        <td width='80%'>` + result.pegawai.golongan + `</td>
+                        <td width='80%'>` + response.pegawai.golongan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Pangkat</td>
-                        <td width='80%'>` + result.pegawai.tmtpangkat + `</td>
+                        <td width='80%'>` + response.pegawai.tmtpangkat + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Level Jabatan </td>
-                        <td width='80%'>` + result.pegawai.level_jabatan + `</td>
+                        <td width='80%'>` + response.pegawai.level_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Nama Jabatan </td>
-                        <td width='80%'>` + result.pegawai.nama_jabatan + `</td>
+                        <td width='80%'>` + response.pegawai.nama_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>TMT Jabatan</td>
-                        <td width='80%'>` + result.pegawai.tmt_jabatan + `</td>
+                        <td width='80%'>` + response.pegawai.tmt_jabatan + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Satker</td>
-                        <td width='80%'>` + result.pegawai.satker + `</td>
+                        <td width='80%'>` + response.pegawai.satker + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Tipe </td>
-                        <td width='80%'>` + result.pegawai.tipepegawai + `</td>
+                        <td width='80%'>` + response.pegawai.tipepegawai + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Status</td>
-                        <td width='80%'>` + result.pegawai.statuspegawai + `</td>
+                        <td width='80%'>` + response.pegawai.statuspegawai + `</td>
                     </tr>
                      <tr>
                         <td width='20%'>Kedudukan </td>
-                        <td width='80%'>` + result.pegawai.kedudukan + `</td>
+                        <td width='80%'>` + response.pegawai.kedudukan + `</td>
                     </tr>
 
                 </table><br>
-                <h2>History Krs</h2><hr>
-                <h3>Pengawas</h3>
+                <h2>History Talent Mapping</h2><hr>
+                
                 <table id='tbl-pengawas' class='table table-bordered table-striped' width='100%'>
                     <tr >
                         <td class="bgtable">Tahun</td>
+                        <td class="bgtable">Level</td>
                         <td class="bgtable">Potensial</td>
                         <td class="bgtable">Kinerja</td>
                         <td class="bgtable">Kotak</td>
                         <td class="bgtable">View Detail</td>
-                    </tr></table><br><hr>
-                <h3>Administrator</h3>
-                <table id='tbl-admin' class='table table-bordered table-striped' width='100%'>
-                    <tr >
-                        <td class="bgtable">Tahun</td>
-                        <td class="bgtable">Potensial</td>
-                        <td class="bgtable">Kinerja</td>
-                        <td class="bgtable">Kotak</td>
-                        <td class="bgtable">View Detail</td>
-                    </tr></table>`);
+                    </tr></table><br>
+                `);
 
-                    $.each(result.pengawas, function(i, item) {
+                    $.each(response.talentmapping, function(i, item) {
+                        var str = item.jenis;
+                        str = str.replace(/_/g, ' ');
                         var myArr = JSON.parse(item.nilai);
                         $('#tbl-pengawas tr:last').after(`
                     <tr >
                         <td class="bgbold">` + item.tahun + `</td>
+                        <td class="bgbold">` + str + `</td>
                         <td class="bgbold">` + myArr[0] + `</td>
                         <td class="bgbold">` + myArr[1] + `</td>
                         <td class="bgbold">` + myArr[2] + `</td>
-                        <td class="bgbold"><a href="/report/pegawai/detail-talent/pengawas/` + item.id + `/` + item
-                            .id_krs + `/` + item.nip + `" target="_BLANK">View Detail</a></td>
+                        <td class="bgbold"><a href="{{url('/report/pegawai/detail-talent/pengawas/` + item.id + `/` + item
+                            .id_krs + `/` + item.nip + `')}}" target="_BLANK" class="btn btn-primary">View Detail</a></td>
                     </tr>`);
                     })
 
-                    $.each(result.administrator, function(i, item) {
+                    $.each(response.administrator, function(i, item) {
                         var myArr = JSON.parse(item.nilai);
                         $('#tbl-admin tr:last').after(`
                     <tr >
@@ -302,8 +302,8 @@
                         <td class="bgbold">` + myArr[0] + `</td>
                         <td class="bgbold">` + myArr[1] + `</td>
                         <td class="bgbold">` + myArr[2] + `</td>
-                        <td class="bgbold"><a href="/report/pegawai/detail-talent/administrator/` + item.id + `/` +
-                            item.id_krs + `/` + item.nip + `" target="_BLANK">View Detail</a></td>
+                        <td class="bgbold"><a href="{{url('/report/pegawai/detail-talent/administrator/` + item.id + `/` +
+                            item.id_krs + `/` + item.nip + `')}}" target="_BLANK">View Detail</a></td>
                     </tr>`);
                     })
 
@@ -319,6 +319,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNipPegawai') }}",
+                    type:'POST',
                     delay: 800,
                     data: function(params) {
                         return {

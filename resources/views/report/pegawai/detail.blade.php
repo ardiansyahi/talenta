@@ -56,29 +56,29 @@
             <div class="card card-statistics">
                 <div class="card-body">
                     <div class='row mb-3 mt-3'>
-                        <div class='col-lg-1'>NIP</div>
-                        <div class='col-lg-11'>{{$dataPegawai->nip}}</div>
+                        <div class='col-lg-2'>NIP</div>
+                        <div class='col-lg-10'>{{$dataPegawai->nip}}</div>
                     </div>
                     <div class='row mb-3 mt-3'>
-                        <div class='col-lg-1'>Nama</div>
-                        <div class='col-lg-11'>{{$dataPegawai->nama_lengkap}}</div>
+                        <div class='col-lg-2'>Nama</div>
+                        <div class='col-lg-10'>{{$dataPegawai->nama_lengkap}}</div>
                     </div>
                     <div class='row mb-3 mt-3'>
-                        <div class='col-lg-1'>KRS Tahun</div>
-                        <div class='col-lg-11'>{{$dataKRS->tahun}}</div>
+                        <div class='col-lg-2'>Talent Mapping Tahun</div>
+                        <div class='col-lg-10'>{{$dataKRS->tahun}}</div>
                     </div>
                     <div class='row mb-3'>
-                        <div class='col-lg-1'>Jenis KRS</div>
-                        <div class='col-lg-11'>{{$dataKRS->jenis}}</div>
+                        <div class='col-lg-2'>Talent Mapping Jenis</div>
+                        <div class='col-lg-10'>{{str_ireplace("_"," ",$dataKRS->jenis)}}</div>
                     </div>
                     <div class='row mb-3'>
-                        <div class='col-lg-1'>Batch</div>
-                        <div class='col-lg-11'>{{$dataKRS->batch}}</div>
+                        <div class='col-lg-2'>Batch</div>
+                        <div class='col-lg-10'>{{$dataKRS->batch}}</div>
                     </div>
                    
                     <div class='row mb-3'>
-                        <div class='col-lg-1'>Deskripsi</div>
-                        <div class='col-lg-11'>{{$dataKRS->deskripsi}}</div>
+                        <div class='col-lg-2'>Deskripsi</div>
+                        <div class='col-lg-10'>{{$dataKRS->deskripsi}}</div>
                     </div>
                 </div>
             </div>

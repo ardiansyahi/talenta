@@ -60,12 +60,13 @@
                             </div>
                             <div class='col-sm-2 text-center'>
                                 <select name='jenis' class='form-control' id='jenis'>
-                                    <option value=''>Pilih Jenis KRS</option>
-                                    <option value="pengawas" {{ @$jenis == 'pengawas' ? 'Selected' : '' }}>KRS Pengawas
-                                    </option>
-                                    <option value="administrator" {{ @$jenis == 'administrator' ? 'Selected' : '' }}>
-                                        Administrator</option>
-                                    <option value="jpt" {{ @$jenis == 'jpt' ? 'Selected' : '' }}>JPT</option>
+                                    <option value=''>Pilih Jenis Talent Mapping</option>
+                                    <option value="pelaksana" {{ @$jenis == 'pelaksana' ? 'Selected' : '' }}>Pelaksana</option>
+                                    <option value="pengawas" {{ @$jenis == 'pengawas' ? 'Selected' : '' }}>Pengawas</option>
+                                    <option value="administrator" {{ @$jenis == 'administrator' ? 'Selected' : '' }}>Administrator</option>
+                                    <option value="jpt_pratama" {{ @$jenis == 'jpt_pratama' ? 'Selected' : '' }}>JPT Pratama</option>
+                                    <option value="jpt_madya" {{ @$jenis == 'jpt_madya' ? 'Selected' : '' }}>JPT Madya</option>
+                                    
                                 </select>
                             </div>
                             <div class='col-sm-2 text-center'>
@@ -124,10 +125,12 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('ajx-getDataKrs') }}',
+                    type:'post',
                     data: {
                         tahun: $("#tahun").val(),
                         jenis: $("#jenis").val(),
-                        status: $("#status").val()
+                        status: $("#status").val(),
+                        _token: "{{ csrf_token() }}",
                     }
                 },
                 columns: [{

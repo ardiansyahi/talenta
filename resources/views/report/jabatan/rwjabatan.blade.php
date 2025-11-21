@@ -76,7 +76,7 @@
                                         }
 
                                     @endphp
-                                    <a href="/report/rw-jabatan/export/{{ $np }}"
+                                    <a href="{{url('/report/rw-jabatan/export/'.$np.'')}}"
                                         class="btn btn-success float-right">Export Data</a>
                                 </div>
                             </div>
@@ -116,8 +116,10 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('ajx-getRwJabatanJson') }}',
+                    type:'post',
                     data: {
-                        nip: $("#nip").val()
+                        nip: $("#nip").val(),
+                        _token: "{{ csrf_token() }}"
                     }
                 },
                 columns: [{
@@ -155,6 +157,7 @@
                 ajax: {
                     dataType: 'json',
                     url: "{{ route('ajx-getNIPRWJ') }}",
+                    type:'post',
                     delay: 800,
                     data: function(params) {
                         return {
